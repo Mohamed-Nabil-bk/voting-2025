@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام فرز الأصوات الانتخابية</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+    .btn-primary:hover,.btn-secondary:hover,.btn-success:hover,.btn-warning:hover{transform:translateY(-2px)}.header,.modal-header,.stat-card{text-align:center}*{margin:0;padding:0;box-sizing:border-box}html{font-size:16px}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0,#764ba2 100%);min-height:100vh;padding:clamp(10px,2vw,20px);line-height:1.6}.container{max-width:1400px;width:100%;margin:0 auto;background:#fff;border-radius:clamp(8px,1.5vw,15px);box-shadow:0 20px 40px rgba(0,0,0,.1);overflow:hidden}.header{background:linear-gradient(135deg,#2c3e50,#34495e);color:#fff;padding:clamp(20px,4vw,30px)}.candidates-table tr:hover,.section{background:#f8f9fa}.header p{font-size:clamp(1.5rem, 4vw, 2.5rem);font-weight:700;margin:0;text-shadow:2px 2px 4px rgba(0,0,0,.3)}.main-content{padding:clamp(15px,3vw,30px)}.section{margin-bottom:clamp(15px,2.5vw,25px);padding:clamp(15px,3vw,25px);border-radius:clamp(8px,1vw,12px);box-shadow:0 4px 6px rgba(0,0,0,.05);border-right:5px solid #667eea}.section-title{color:#2c3e50;font-size:clamp(1.2rem, 2.5vw, 1.5rem);margin-bottom:clamp(15px,2vw,20px);padding-bottom:10px;border-bottom:2px solid #ecf0f1;display:flex;align-items:center;gap:clamp(8px,1vw,10px);flex-wrap:wrap}.btn,.input-group label{font-size:clamp(.9rem, 1.5vw, 1rem)}.input-group label,.stat-number{margin-bottom:clamp(6px,1vw,8px)}.section-title::before{content:"📊";font-size:1.2em}.voting-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:clamp(15px,2vw,20px)}.input-group{display:flex;flex-direction:column;min-width:0}.input-group label{font-weight:600;color:#34495e}.input-group input,.input-group select{padding:clamp(10px,1.5vw,12px) clamp(12px,2vw,15px);border:2px solid #ddd;border-radius:clamp(6px,1vw,8px);font-size:clamp(.9rem, 1.5vw, 1rem);transition:.3s;background:#fff;width:100%}.input-group input:focus,.input-group select:focus{outline:0;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.1)}.button-group{display:flex;gap:clamp(10px,2vw,15px);justify-content:center;flex-wrap:wrap;margin-top:clamp(15px,2vw,20px)}.btn{padding:clamp(10px,1.5vw,12px) clamp(20px,3vw,25px);border:none;border-radius:clamp(6px,1vw,8px);font-weight:600;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:clamp(6px,1vw,8px);min-width:clamp(120px,20vw,150px);justify-content:center;flex:1 1 auto;max-width:200px}.btn-primary{background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff}.btn-primary:hover{box-shadow:0 6px 12px rgba(46,204,113,.3)}.btn-warning{background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff}.btn-warning:hover{box-shadow:0 6px 12px rgba(243,156,18,.3)}.btn-danger{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}.btn-danger:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 12px rgba(231,76,60,.3)}.btn-secondary{background:linear-gradient(135deg,#95a5a6,#7f8c8d);color:#fff}.btn-secondary:hover{box-shadow:0 6px 12px rgba(149,165,166,.3)}.btn-success{background:linear-gradient(135deg,#3498db,#2980b9);color:#fff}.btn-success:hover{box-shadow:0 6px 12px rgba(52,152,219,.3)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}.stats-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(15px,2vw,20px)}.stat-card{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:clamp(20px,3vw,25px);border-radius:clamp(8px,1vw,12px);box-shadow:0 8px 16px rgba(102,126,234,.3);transition:transform .3s}.stat-card:hover{transform:translateY(-5px)}.stat-number{font-size:clamp(1.8rem, 4vw, 2.5rem);font-weight:700}.alert,.stat-label{font-size:clamp(.9rem, 1.5vw, 1rem)}.stat-label{opacity:.9}.alert{padding:clamp(12px,2vw,15px);border-radius:clamp(6px,1vw,8px);margin-bottom:clamp(15px,2vw,20px);display:none;font-weight:500}.alert-error{background:#ffebee;color:#c62828;border-right:4px solid #e53935}.alert-success{background:#e8f5e8;color:#2e7d32;border-right:4px solid #4caf50}.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,.5);padding:clamp(10px,2vw,20px)}.modal-content{background-color:#fff;margin:clamp(5%,10vh,15%) auto;padding:clamp(20px,4vw,30px);border-radius:clamp(8px,1vw,12px);width:100%;max-width:min(500px,95vw);box-shadow:0 20px 40px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto}.modal-header{font-size:clamp(1.3rem, 2.5vw, 1.5rem);font-weight:700;color:#2c3e50;margin-bottom:clamp(15px,2vw,20px)}.candidates-table{width:100%;border-collapse:collapse;margin-top:clamp(15px,2vw,20px);background:#fff;border-radius:clamp(6px,1vw,8px);overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1);font-size:clamp(.8rem, 1.2vw, 1rem)}.candidates-table td,.candidates-table th{padding:clamp(10px,2vw,15px);text-align:center;border-bottom:1px solid #ecf0f1}.candidates-table th{background:linear-gradient(135deg,#34495e,#2c3e50);color:#fff;font-weight:600}@media (max-width:575.98px){.stats-container,.voting-form{grid-template-columns:1fr}.button-group{flex-direction:column}.btn{max-width:none;min-width:auto}.candidates-table{font-size:.8rem}.candidates-table td,.candidates-table th{padding:8px 5px}}@media (min-width:576px) and (max-width:767.98px){.stats-container{grid-template-columns:repeat(2,1fr)}}@media (min-width:768px) and (max-width:991.98px){.stats-container,.voting-form{grid-template-columns:repeat(2,1fr)}}@media (min-width:992px) and (max-width:1199.98px){.stats-container,.voting-form{grid-template-columns:repeat(3,1fr)}}@media (min-width:1200px){.stats-container,.voting-form{grid-template-columns:repeat(4,1fr)}}@media (min-width:1400px){.container{max-width:1400px}}@media print{body{background:#fff;padding:0}.container{box-shadow:none;border-radius:0}.btn,.modal{display:none!important}}@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){.header p{text-shadow:1px 1px 2px rgba(0,0,0,.3)}}@media (max-width:767.98px) and (orientation:landscape){.modal-content{margin:2% auto;max-height:95vh}}@media (prefers-reduced-motion:reduce){*{animation-duration:0s!important;animation-iteration-count:1!important;transition-duration:0s!important}.btn:hover,.stat-card:hover{transform:none}}.btn:focus-visible,.input-group input:focus-visible,.input-group select:focus-visible{outline:#667eea solid 3px;outline-offset:2px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <p>نظام فرز الأصوات الانتخابية</p>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h2 class="section-title">إعداد التصويت</h2>
+                <div class="voting-form">
+                    <div class="input-group">
+                        <label class="stat-label">إجمالي عدد الناخبين (يدوي)</label>
+                        <input type="number" id="manualTotalVotesInput" placeholder="أدخل إجمالي الأصوات"
+                            class="stat-input" oninput="updateStats()">
+                    </div>
+                    <div class="input-group">
+                        <label for="candidatesPerVote">عدد المرشحين في الصوت الصحيح:</label>
+                        <select id="candidatesPerVote" onchange="updateVotingForm()">
+                            <option value="1">مرشح واحد</option>
+                            <option value="2" selected>مرشحان</option>
+                            <option value="3">3 مرشحين</option>
+                            <option value="4">4 مرشحين</option>
+                            <option value="5">5 مرشحين</option>
+                            <option value="6">6 مرشحين</option>
+                            <option value="7">7 مرشحين</option>
+                            <option value="8">8 مرشحين</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم التصويت -->
+            <div class="section">
+                <h2 class="section-title" id="votingSectionTitle">تسجيل الصوت الصحيح (2 مرشحين)</h2>
+                <div class="alert alert-error" id="errorAlert"></div>
+                <div class="alert alert-success" id="successAlert"></div>
+
+                <div class="voting-form" id="votingInputs">
+                    <div class="input-group">
+                        <label for="candidate1">الأول:</label>
+                        <input type="number" id="candidate1" placeholder="رقم المرشح">
+                    </div>
+                    <div class="input-group">
+                        <label for="candidate2">الثاني:</label>
+                        <input type="number" id="candidate2" placeholder="رقم المرشح">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="recordVote()">
+                        <i class="fas fa-check-circle"></i> صوت صحيح
+                    </button>
+
+                    <button class="btn btn-warning" onclick="recordInvalidVote()">
+                        <i class="fas fa-times-circle"></i> صوت باطل
+                    </button>
+
+                    <button class="btn btn-danger" id="undoBtn" onclick="undoLastVote()" disabled>
+                        <i class="fas fa-undo-alt"></i> تراجع
+                    </button>
+
+                    <button class="btn btn-secondary" id="exportResultsBtn" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i> تصدير النتائج
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم إدارة المرشحين -->
+            <div class="section">
+                <h2 class="section-title">إدارة المرشحين</h2>
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="showAddCandidateModal()">
+                        <i class="fas fa-user-plus"></i> تعيين عدد المرشحين
+                    </button>
+
+                    <button class="btn btn-warning" onclick="showDeleteCandidateModal()">
+                        <i class="fas fa-user-minus"></i> حذف مرشح
+                    </button>
+
+                    <button class="btn btn-secondary" onclick="resetAllVotes()">
+                        <i class="fas fa-trash-alt"></i> مسح الكل
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم الإحصائيات -->
+            <div class="section">
+                <h2 class="section-title">الإحصائيات العامة</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCandidates">0</div>
+                        <div class="stat-label">عدد المرشحين</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalVotes">0</div>
+                        <div class="stat-label">إجمالي الأصوات</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalVoteSets">0</div>
+                        <div class="stat-label">الأصوات الصحيحة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="invalidVotes">0</div>
+                        <div class="stat-label">الأصوات الباطلة</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم نتائج المرشحين -->
+            <div class="section" id="resultsSection">
+                <h2 class="section-title">نتائج المرشحين</h2>
+                <table class="candidates-table" id="candidatesTable">
+                    <thead>
+                        <tr>
+                            <th>رقم المرشح</th>
+                            <th>عدد الأصوات</th>
+                            <th>النسبة المئوية</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidatesTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal لإضافة المرشحين -->
+    <div id="addCandidateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">تعيين عدد المرشحين</div>
+            <div class="input-group">
+                <label for="totalCandidatesInput">عدد المرشحين:</label>
+                <input type="number" id="totalCandidatesInput" min="1" max="50" value="2">
+            </div>
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="addCandidates()">تأكيد</button>
+                <button class="btn btn-secondary" onclick="closeModal('addCandidateModal')">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal لحذف المرشح -->
+    <div id="deleteCandidateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">حذف مرشح</div>
+            <div class="input-group">
+                <label for="deleteCandidateInput">رقم المرشح المراد حذفه:</label>
+                <input type="number" id="deleteCandidateInput" min="1">
+            </div>
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn btn-danger" onclick="deleteCandidate()">حذف</button>
+                <button class="btn btn-secondary" onclick="closeModal('deleteCandidateModal')">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // البيانات العامة
+        let candidates = {};
+        let validVotes = [];
+        let invalidVotesCount = 0;
+        let voteHistory = [];
+
+        // تهيئة النظام
+        document.addEventListener('DOMContentLoaded', function () {
+            updateVotingForm();
+            updateStats();
+            updateCandidatesTable();
+            setupInputEventListeners();
+
+            document.getElementById('newCandidateId').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addCandidate();
+                }
+            });
+        });
+
+        function updateVotingForm() {
+            candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
+            const votingInputs = document.getElementById('votingInputs');
+            const votingSectionTitle = document.getElementById('votingSectionTitle');
+
+            // تحديث العنوان
+            const candidateText = candidatesPerVote === 1 ? 'مرشح واحد' :
+                candidatesPerVote === 2 ? 'مرشحان' :
+                    `${candidatesPerVote} مرشحين`;
+            votingSectionTitle.textContent = `تسجيل الصوت الصحيح (${candidateText})`;
+
+            // مسح الحقول الموجودة
+            votingInputs.innerHTML = '';
+
+            // إنشاء الحقول الجديدة
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'input-group';
+
+                const label = document.createElement('label');
+                label.setAttribute('for', `candidate${i}`);
+                label.textContent = getOrdinalText(i) + ':';
+
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `candidate${i}`;
+                input.placeholder = 'رقم المرشح';
+
+                inputGroup.appendChild(label);
+                inputGroup.appendChild(input);
+                votingInputs.appendChild(inputGroup);
+            }
+
+            setupInputEventListeners();
+
+            document.getElementById('candidate1').focus();
+        }
+
+        // الحصول على النص الترتيبي للأرقام
+        function getOrdinalText(number) {
+            const ordinals = {
+                1: 'الأول',
+                2: 'الثاني',
+                3: 'الثالث',
+                4: 'الرابع',
+                5: 'الخامس',
+                6: 'السادس',
+                7: 'السابع',
+                8: 'الثامن'
+            };
+            return ordinals[number] || `المرشح رقم ${number}`;
+        }
+
+        // إعداد مستمعات الأحداث للحقول
+        function setupInputEventListeners() {
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                const input = document.getElementById(`candidate${i}`);
+                if (input) {
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            if (i < candidatesPerVote) {
+                                const nextInput = document.getElementById(`candidate${i + 1}`);
+                                if (nextInput) nextInput.focus();
+                            } else {
+                                recordVote();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // تسجيل صوت صحيح
+        function recordVote() {
+            const candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
+            const voteNumbers = [];
+
+            // جمع أرقام المرشحين
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                const input = document.getElementById(`candidate${i}`);
+                const value = parseInt(input.value);
+
+                if (!value || value <= 0) {
+                    showError(`يرجى إدخال رقم صحيح للمرشح ${i}`);
+                    return;
+                }
+
+                if (voteNumbers.includes(value)) {
+                    showError('لا يمكن تكرار نفس المرشح في الصوت الواحد');
+                    return;
+                }
+
+                voteNumbers.push(value);
+            }
+
+            for (let id of voteNumbers) {
+                if (!(id in candidates)) {
+                    showError(`المرشح رقم ${id} غير موجود. يرجى إضافته أولاً`);
+                    return;
+                }
+            }
+
+            // تسجيل الأصوات
+            voteNumbers.forEach(num => {
+                candidates[num]++;
+            });
+
+            validVotes.push([...voteNumbers]);
+            voteHistory.push({ type: 'valid', data: [...voteNumbers] });
+
+            // مسح الحقول
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                document.getElementById(`candidate${i}`).value = '';
+            }
+
+            showSuccess(`تم تسجيل صوت صحيح للمرشحين: ${voteNumbers.join(', ')}`);
+            updateStats();
+            updateCandidatesTable();
+            document.getElementById('undoBtn').disabled = false;
+            document.getElementById('candidate1').focus();
+
+        }
+
+        // تسجيل صوت باطل
+        function recordInvalidVote() {
+            invalidVotesCount++;
+            voteHistory.push({ type: 'invalid' });
+            showSuccess('تم تسجيل صوت باطل');
+            updateStats();
+            document.getElementById('undoBtn').disabled = false;
+            document.getElementById('candidate1').focus();
+
+        }
+
+        // التراجع عن آخر صوت
+        function undoLastVote() {
+            if (voteHistory.length === 0) return;
+
+            const lastVote = voteHistory.pop();
+
+            if (lastVote.type === 'valid') {
+                lastVote.data.forEach(candidateNum => {
+                    candidates[candidateNum]--;
+                    if (candidates[candidateNum] === 0) {
+                        delete candidates[candidateNum];
+                    }
+                });
+                validVotes.pop();
+                showSuccess('تم التراجع عن آخر صوت صحيح');
+                document.getElementById('candidate1').focus();
+
+            } else {
+                invalidVotesCount--;
+                showSuccess('تم التراجع عن آخر صوت باطل');
+                document.getElementById('candidate1').focus();
+
+            }
+
+            if (voteHistory.length === 0) {
+                document.getElementById('undoBtn').disabled = true;
+                document.getElementById('candidate1').focus();
+
+            }
+
+            updateStats();
+            updateCandidatesTable();
+        }
+
+        function showAddCandidateModal() {
+            document.getElementById('addCandidateModal').style.display = 'block';
+        }
+
+        function addCandidates() {
+            const totalCandidates = parseInt(document.getElementById('totalCandidatesInput').value);
+
+            if (!totalCandidates || totalCandidates <= 0) {
+                alert('يرجى إدخال عدد صحيح من المرشحين');
+                return;
+            }
+
+            for (let i = 1; i <= totalCandidates; i++) {
+                if (!candidates[i]) {
+                    candidates[i] = 0;
+                }
+            }
+
+            closeModal('addCandidateModal');
+            updateStats();
+            updateCandidatesTable();
+            showSuccess(`تم إضافة ${totalCandidates} مرشح`);
+            document.getElementById('candidate1').focus();
+
+        }
+
+        function showDeleteCandidateModal() {
+            document.getElementById('deleteCandidateModal').style.display = 'block';
+        }
+
+        function deleteCandidate() {
+            const candidateNum = parseInt(document.getElementById('deleteCandidateInput').value);
+
+            if (!candidateNum || !candidates[candidateNum]) {
+                alert('المرشح غير موجود');
+                return;
+            }
+
+            delete candidates[candidateNum];
+
+            validVotes = validVotes.filter(vote => !vote.includes(candidateNum));
+            voteHistory = voteHistory.filter(vote =>
+                vote.type === 'invalid' || !vote.data.includes(candidateNum)
+            );
+
+            closeModal('deleteCandidateModal');
+            updateStats();
+            updateCandidatesTable();
+            showSuccess(`تم حذف المرشح رقم ${candidateNum}`);
+            document.getElementById('candidate1').focus();
+
+        }
+
+        function resetAllVotes() {
+            if (confirm('هل أنت متأكد من مسح جميع البيانات؟')) {
+                candidates = {};
+                validVotes = [];
+                invalidVotesCount = 0;
+                voteHistory = [];
+
+                document.getElementById('undoBtn').disabled = true;
+                document.getElementById('manualTotalVotesInput').value = '';
+
+                updateStats();
+                updateCandidatesTable();
+                showSuccess('تم مسح جميع البيانات');
+                document.getElementById('candidate1').focus();
+
+            }
+        }
+
+        function updateStats() {
+            const totalCandidatesCount = Object.keys(candidates).length;
+            const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
+            const totalVoteSetsCount = validVotes.length;
+            const manualTotal = parseInt(document.getElementById('manualTotalVotesInput').value) || 0;
+
+            document.getElementById('totalCandidates').textContent = totalCandidatesCount;
+            document.getElementById('totalVotes').textContent = manualTotal || totalVotesCount;
+            document.getElementById('totalVoteSets').textContent = totalVoteSetsCount;
+            document.getElementById('invalidVotes').textContent = invalidVotesCount;
+        }
+
+        // تحديث جدول المرشحين
+        function updateCandidatesTable() {
+            const tbody = document.getElementById('candidatesTableBody');
+            tbody.innerHTML = '';
+
+            const totalVotes = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
+            const sortedCandidates = Object.entries(candidates).sort((a, b) => b[1] - a[1]);
+
+            sortedCandidates.forEach(([candidateNum, votes]) => {
+                const percentage = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(2) : 0;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${candidateNum}</td>
+                    <td>${votes}</td>
+                    <td>${percentage}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successAlert = document.getElementById('successAlert');
+            successAlert.textContent = message;
+            successAlert.style.display = 'block';
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 3000);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.getElementById('candidate1').focus();
+
+        }
+
+        window.onclick = function (event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    document.getElementById('candidate1').focus();
+
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                recordVote();
+            }
+            else if (e.ctrlKey && e.key === 'z') {
+                e.preventDefault();
+                if (!document.getElementById('undoBtn').disabled) {
+                    undoLastVote();
+                }
+            }
+            else if (e.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                        document.getElementById('candidate1').focus();
+                    }
+                });
+            }
+        });
+        async function exportToPDF() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                // جلب البيانات
+                const totalCandidates = document.getElementById('totalCandidates').textContent;
+                const totalVotes = document.getElementById('totalVotes').textContent;
+                const totalVoteSets = document.getElementById('totalVoteSets').textContent;
+                const invalidVotes = document.getElementById('invalidVotes').textContent;
+                const manualTotal = document.getElementById('manualTotalVotesInput').value || 'غير محدد';
+                const tableBody = document.getElementById('candidatesTableBody');
+
+                const reportDate = new Date().toLocaleDateString('ar-EG', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                let candidatesData = [];
+                if (tableBody && tableBody.children.length > 0) {
+                    candidatesData = Array.from(tableBody.children).map(row => ({
+                        number: row.children[0].textContent,
+                        votes: row.children[1].textContent,
+                        percentage: row.children[2].textContent
+                    }));
+                }
+
+                const candidatePages = [];
+                let currentIndex = 0;
+
+                if (candidatesData.length > 0) {
+                    const firstPageCount = Math.min(7, candidatesData.length);
+                    candidatePages.push(candidatesData.slice(0, firstPageCount));
+                    currentIndex = firstPageCount;
+                }
+
+                while (currentIndex < candidatesData.length) {
+                    const nextPageCount = Math.min(14, candidatesData.length - currentIndex);
+                    candidatePages.push(candidatesData.slice(currentIndex, currentIndex + nextPageCount));
+                    currentIndex += nextPageCount;
+                }
+
+                let pageHtml = createFirstPageHTML(reportDate, totalCandidates, totalVotes, totalVoteSets, invalidVotes, candidatePages[0] || [], 1);
+                await addPageToPDF(pdf, pageHtml, true);
+
+                let serialStart = candidatePages[0] ? candidatePages[0].length + 1 : 1;
+                for (let i = 1; i < candidatePages.length; i++) {
+                    pdf.addPage();
+                    pageHtml = createCandidatesPageHTML(candidatePages[i], i + 1, candidatePages.length, serialStart);
+                    await addPageToPDF(pdf, pageHtml, false);
+                    serialStart += candidatePages[i].length;
+                }
+
+                if (candidatePages.length > 0) {
+                    pdf.addPage();
+                    pageHtml = createFinalPageHTML(reportDate);
+                    await addPageToPDF(pdf, pageHtml, false);
+                }
+
+                const fileName = `تقرير_النتائج_${new Date().toISOString().split('T')[0]}.pdf`;
+                pdf.save(fileName);
+
+                showAlert('تم تصدير التقرير بنجاح!', 'success');
+
+            } catch (error) {
+                console.error('خطأ في تصدير PDF:', error);
+                showAlert('حدث خطأ أثناء تصدير التقرير', 'error');
+            }
+        }
+        async function addPageToPDF(pdf, htmlContent, isFirstPage) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                position: absolute;
+                left: -9999px;
+                top: 0;
+                width: 794px;
+                background: white;
+                padding: 40px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                direction: rtl;
+                color: #333;
+                line-height: 1.6;
+            `;
+
+            container.innerHTML = htmlContent;
+            document.body.appendChild(container);
+
+            const canvas = await html2canvas(container, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                scrollX: 0,
+                scrollY: 0
+            });
+
+            document.body.removeChild(container);
+
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 210;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        }
+
+        function createFirstPageHTML(reportDate, totalCandidates, totalVotes, totalVoteSets, invalidVotes, firstPageCandidates, serialStart = 1) {
+            let candidatesTableHTML = '';
+
+            if (firstPageCandidates.length > 0) {
+                candidatesTableHTML = `
+                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <thead>
+                            <tr style="background: linear-gradient(45deg, #667eea, #764ba2); color: white;">
+                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center; width: 80px;">م</th>
+                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">رقم المرشح</th>
+                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">عدد الأصوات</th>
+                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">النسبة المئوية</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                firstPageCandidates.forEach((candidate, index) => {
+                    const bgColor = index % 2 === 0 ? '#f8f9ff' : 'white';
+                    candidatesTableHTML += `
+                        <tr style="background: ${bgColor};">
+                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center; font-weight: bold; color: #667eea;">${serialStart + index}</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.number}</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.votes}</td>
+                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.percentage}</td>
+                        </tr>
+                    `;
+                        });
+
+                        candidatesTableHTML += '</tbody></table>';
+                    } else {
+                        candidatesTableHTML = '<p style="color: #666; text-align: center; margin: 20px 0;">لا توجد نتائج متاحة حالياً</p>';
+                    }
+
+                    return `
+                <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 30px; text-align: center; border-radius: 10px; margin-bottom: 30px;">
+                    <h1 style="margin: 0; font-size: 28px;">تقرير نتائج فرز الأصوات الانتخابية</h1>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">معلومات التقرير</h2>
+                    <p><strong>تاريخ التقرير:</strong> ${reportDate}</p>
+                    <p><strong>النظام:</strong> نظام فرز الأصوات الانتخابية</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">الإحصائيات العامة</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
+                            <strong>عدد المرشحين:</strong> ${totalCandidates}
+                        </div>
+                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
+                            <strong>إجمالي الأصوات:</strong> ${totalVotes}
+                        </div>
+                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
+                            <strong>الأصوات الصحيحة:</strong> ${totalVoteSets}
+                        </div>
+                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
+                            <strong>الأصوات الباطلة:</strong> ${invalidVotes}
+                        </div>
+                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea; margin-top: 15px;">
+                            <strong>الأصوات المُدلى بها:</strong> ${parseInt(totalVoteSets) + parseInt(invalidVotes)}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">نتائج المرشحين</h2>
+                    ${candidatesTableHTML}
+                </div>
+            `;
+                }
+
+                // دالة إنشاء صفحات المرشحين الإضافية
+                function createCandidatesPageHTML(candidates, pageNumber, totalPages, serialStart) {
+                    let candidatesTableHTML = `
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr style="background: linear-gradient(45deg, #667eea, #764ba2); color: white;">
+                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center; width: 80px;">م</th>
+                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">رقم المرشح</th>
+                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">عدد الأصوات</th>
+                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">النسبة المئوية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            candidates.forEach((candidate, index) => {
+                const bgColor = index % 2 === 0 ? '#f8f9ff' : 'white';
+                candidatesTableHTML += `
+                    <tr style="background: ${bgColor};">
+                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center; font-weight: bold; color: #667eea;">${serialStart + index}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.number}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.votes}</td>
+                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.percentage}</td>
+                    </tr>
+                `;
+            });
+
+            candidatesTableHTML += '</tbody></table>';
+
+            return `
+                <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 30px;">
+                    <h1 style="margin: 0; font-size: 24px;">تكملة نتائج المرشحين - صفحة ${pageNumber}</h1>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">نتائج المرشحين (تكملة)</h2>
+                    ${candidatesTableHTML}
+                </div>
+
+                <div style="text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
+                    <p>صفحة ${pageNumber} من ${totalPages}</p>
+                </div>
+            `;
+        }
+
+        // دالة إنشاء الصفحة النهائية
+        function createFinalPageHTML(reportDate) {
+            return `
+                <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 30px;">
+                    <h1 style="margin: 0; font-size: 24px;">الملاحظات والتوقيعات</h1>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">ملاحظات</h2>
+                    <ul style="color: #666; padding-right: 20px;">
+                        <li>تم إنشاء هذا التقرير آلياً من نظام فرز الأصوات الانتخابية</li>
+                        <li>يُرجى مراجعة البيانات والتأكد من صحتها قبل الاعتماد عليها</li>
+                        <li>في حالة وجود أي استفسارات، يُرجى التواصل مع الإدارة المختصة</li>
+                        <li>تم تقسيم نتائج المرشحين على عدة صفحات لسهولة القراءة</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 50px;">
+                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">التوقيعات</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 2px solid #333; width: 200px; margin: 40px auto 10px;"></div>
+                            <p><strong>رئيس اللجنة</strong></p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 2px solid #333; width: 200px; margin: 40px auto 10px;"></div>
+                            <p><strong>أمين اللجنة</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
+                    <p>تم إنشاء هذا التقرير في ${reportDate}</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <p style="font-size: 1.1rem; color: #444;">
+                        إهداء من المستشار <strong>محمد الحمراوي</strong> للسادة الأعضاء
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>
