@@ -469,10 +469,10 @@
                         <input type="number" id="manualTotalVotesInput" placeholder="أدخل إجمالي الأصوات"
                             class="stat-input" oninput="updateStats()">
                     </div>
-                     <div class="input-group">
+                    <div class="input-group">
                         <label for="totalCandidatesInput">إجمالي عدد المرشحين:</label>
                         <input type="number" id="totalCandidatesInput" placeholder="أدخل إجمالي المرشحين"
-                         class="stat-input" oninput="addCandidates()">
+                            class="stat-input" oninput="addCandidate()">
                     </div>
                     <div class="input-group">
                         <label for="candidatesPerVote">عدد المرشحين في الصوت الصحيح:</label>
@@ -494,7 +494,7 @@
                             <option value="15">15 مرشح</option>
                         </select>
                     </div>
-                   
+
                 </div>
             </div>
 
@@ -823,6 +823,26 @@
             document.getElementById('addCandidateModal').style.display = 'block';
         }
 
+        function addCandidate() {
+            const totalCandidates = parseInt(document.getElementById('totalCandidatesInput').value);
+
+            if (!totalCandidates || totalCandidates <= 0) {
+                alert('يرجى إدخال عدد صحيح من المرشحين');
+                return;
+            }
+
+            for (let i = 1; i <= totalCandidates; i++) {
+                if (!candidates[i]) {
+                    candidates[i] = 0;
+                }
+            }
+
+            closeModal('addCandidateModal');
+            updateStats();
+            updateCandidatesTable();
+            showSuccess(`تم إضافة ${totalCandidates} مرشح`);
+
+        }
         function addCandidates() {
             const totalCandidates = parseInt(document.getElementById('totalCandidatesInput').value);
 
