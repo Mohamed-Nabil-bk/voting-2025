@@ -24,7 +24,7 @@
                 <h2 class="section-title">إعداد التصويت</h2>
                 <div class="voting-form">
                     <div class="input-group">
-                        <label class="stat-label">إجمالي عدد الناخبين المقيدين باللجنة</label>
+                        <label class="stat-label">إجمالي عدد الناخبين باللجنة</label>
                         <input type="number" id="manualTotalVotesInput" placeholder="أدخل إجمالي الأصوات"
                             class="stat-input" oninput="updateStats()">
                     </div>
@@ -193,403 +193,219 @@
         let invalidVotesCount = 0;
         let voteHistory = [];
         let isProcessing = false;
-        let candidatesPerVote = 1;
-
-        // إعدادات iOS
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
         document.addEventListener('DOMContentLoaded', function () {
-            initializeApp();
+            setupSaveLoadButtons();
+            setupAutoSave();
+            updateVotingForm();
+            updateStats();
+            updateCandidatesTable();
+            setupInputEventListeners();
+
+            document.getElementById('newCandidateId').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addCandidates();
+                }
+            });
         });
 
-        function initializeApp() {
-            try {
-                // منع التكبير على iOS
-                if (isIOS) {
-                    document.addEventListener('touchstart', preventZoom, { passive: false });
-                    document.addEventListener('gesturestart', preventZoom, { passive: false });
-
-                    // إضافة meta viewport إذا لم تكن موجودة
-                    let viewport = document.querySelector("meta[name=viewport]");
-                    if (!viewport) {
-                        viewport = document.createElement('meta');
-                        viewport.name = 'viewport';
-                        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-                        document.getElementsByTagName('head')[0].appendChild(viewport);
-                    }
-                }
-
-                loadDataOnStartup();
-                setupSaveLoadButtons();
-                setupAutoSave();
-                updateVotingForm();
-                updateStats();
-                updateCandidatesTable();
-                setupInputEventListeners();
-                setupKeyboardListeners();
-
-                // التركيز على أول حقل
-                setTimeout(() => {
-                    focusFirstInput();
-                }, 100);
-
-            } catch (error) {
-                console.error('خطأ في تهيئة التطبيق:', error);
-                showError('حدث خطأ في تهيئة التطبيق');
-            }
-        }
-
-        function preventZoom(e) {
-            if (e.touches && e.touches.length > 1) {
-                e.preventDefault();
-            }
-        }
-
-        function focusFirstInput() {
-            const firstInput = document.getElementById('candidate1');
-            if (firstInput) {
-                // استخدام setTimeout لضمان التركيز على iOS
-                setTimeout(() => {
-                    firstInput.focus();
-                    if (isIOS) {
-                        firstInput.click();
-                    }
-                }, 50);
-            }
-        }
-
         function updateVotingForm() {
-            try {
-                candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
-                const votingInputs = document.getElementById('votingInputs');
-                const votingSectionTitle = document.getElementById('votingSectionTitle');
+            candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
+            const votingInputs = document.getElementById('votingInputs');
+            const votingSectionTitle = document.getElementById('votingSectionTitle');
 
-                if (!votingInputs || !votingSectionTitle) {
-                    console.error('عناصر النموذج غير موجودة');
-                    return;
-                }
+            // تحديث العنوان
+            const candidateText = candidatesPerVote === 1 ? 'مرشح واحد' :
+                candidatesPerVote === 2 ? 'مرشحان' :
+                    `${candidatesPerVote} مرشحين`;
+            votingSectionTitle.textContent = `تسجيل الصوت الصحيح (${candidateText})`;
 
-                // تحديث العنوان
-                const candidateText = candidatesPerVote === 1 ? 'مرشح واحد' :
-                    candidatesPerVote === 2 ? 'مرشحان' :
-                        `${candidatesPerVote} مرشحين`;
-                votingSectionTitle.textContent = `تسجيل الصوت الصحيح (${candidateText})`;
+            // مسح الحقول الموجودة
+            votingInputs.innerHTML = '';
 
-                // مسح الحقول الموجودة
-                votingInputs.innerHTML = '';
+            // إنشاء الحقول الجديدة
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'input-group';
 
-                // إنشاء الحقول الجديدة
-                for (let i = 1; i <= candidatesPerVote; i++) {
-                    const inputGroup = document.createElement('div');
-                    inputGroup.className = 'input-group';
+                const label = document.createElement('label');
+                label.setAttribute('for', `candidate${i}`);
+                label.textContent = getOrdinalText(i) + '-';
 
-                    const label = document.createElement('label');
-                    label.setAttribute('for', `candidate${i}`);
-                    label.textContent = getOrdinalText(i) + '-';
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `candidate${i}`;
+                input.placeholder = 'رقم المرشح';
 
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.id = `candidate${i}`;
-                    input.placeholder = 'رقم المرشح';
-                    input.inputMode = 'numeric';
-                    input.pattern = '[0-9]*';
-
-                    // إعدادات خاصة بـ iOS
-                    if (isIOS) {
-                        input.setAttribute('autocomplete', 'off');
-                        input.setAttribute('autocorrect', 'off');
-                        input.setAttribute('autocapitalize', 'off');
-                        input.setAttribute('spellcheck', 'false');
-                    }
-
-                    inputGroup.appendChild(label);
-                    inputGroup.appendChild(input);
-                    votingInputs.appendChild(inputGroup);
-                }
-
-                setupInputEventListeners();
-                focusFirstInput();
-
-            } catch (error) {
-                console.error('خطأ في تحديث نموذج التصويت:', error);
-                showError('حدث خطأ في تحديث النموذج');
+                inputGroup.appendChild(label);
+                inputGroup.appendChild(input);
+                votingInputs.appendChild(inputGroup);
             }
+
+            setupInputEventListeners();
+
+            document.getElementById('candidate1').focus();
         }
 
+        // الحصول على النص الترتيبي للأرقام
         function getOrdinalText(number) {
             const ordinals = {
-                1: '1', 2: '2', 3: '3', 4: '4', 5: '5',
-                6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-                11: '11', 12: '12', 13: '13', 14: '14', 15: '15'
+                1: '1',
+                2: '2',
+                3: '3',
+                4: '4',
+                5: '5',
+                6: '6',
+                7: '7',
+                8: '8',
+                9: '9',
+                10: '10',
+                11: '11',
+                12: '12',
+                13: '13',
+                14: '14',
+                15: '15'
             };
             return ordinals[number] || `المرشح رقم ${number}`;
         }
 
+        // إعداد مستمعات الأحداث للحقول
         function setupInputEventListeners() {
-            try {
-                for (let i = 1; i <= candidatesPerVote; i++) {
-                    const input = document.getElementById(`candidate${i}`);
-                    if (input) {
-                        // إزالة المستمعات السابقة
-                        input.removeEventListener('keypress', handleKeyPress);
-                        input.removeEventListener('input', handleInput);
-                        input.removeEventListener('focus', handleFocus);
-                        input.removeEventListener('blur', handleBlur);
-
-                        // إضافة المستمعات الجديدة
-                        input.addEventListener('keypress', handleKeyPress.bind(null, i));
-                        input.addEventListener('input', handleInput);
-
-                        if (isIOS) {
-                            input.addEventListener('focus', handleFocus);
-                            input.addEventListener('blur', handleBlur);
-                            input.addEventListener('touchstart', handleTouch, { passive: true });
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                const input = document.getElementById(`candidate${i}`);
+                if (input) {
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            if (i < candidatesPerVote) {
+                                const nextInput = document.getElementById(`candidate${i + 1}`);
+                                if (nextInput) nextInput.focus();
+                            } else {
+                                recordVote();
+                            }
                         }
-                    }
-                }
-            } catch (error) {
-                console.error('خطأ في إعداد مستمعات الأحداث:', error);
-            }
-        }
-
-        function handleKeyPress(index, e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                if (index < candidatesPerVote) {
-                    const nextInput = document.getElementById(`candidate${index + 1}`);
-                    if (nextInput) {
-                        nextInput.focus();
-                        if (isIOS) {
-                            nextInput.click();
-                        }
-                    }
-                } else {
-                    recordVote();
+                    });
                 }
             }
         }
-
-        function handleInput(e) {
-            // إزالة الأحرف غير الرقمية
-            e.target.value = e.target.value.replace(/[^0-9]/g, '');
-        }
-
-        function handleFocus(e) {
-            // تمرير الشاشة للأعلى قليلاً على iOS لتجنب إخفاء الحقل بالكيبورد
-            setTimeout(() => {
-                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 300);
-        }
-
-        function handleBlur(e) {
-            // لا حاجة لفعل شيء خاص عند فقدان التركيز
-        }
-
-        function handleTouch(e) {
-            // التأكد من التركيز عند اللمس على iOS
-            setTimeout(() => {
-                e.target.focus();
-            }, 10);
-        }
-
-        function setupKeyboardListeners() {
-            // إعداد اختصارات لوحة المفاتيح مع تحسينات لـ iOS
-            document.addEventListener('keydown', (e) => {
-                try {
-                    if (e.ctrlKey && e.key === 'Enter') {
-                        e.preventDefault();
-                        recordVote();
-                    }
-                    else if (e.ctrlKey && e.key === 'z') {
-                        e.preventDefault();
-                        const undoBtn = document.getElementById('undoBtn');
-                        if (undoBtn && !undoBtn.disabled) {
-                            undoLastVote();
-                        }
-                    }
-                    else if (e.key === 'Escape') {
-                        closeAllModals();
-                    }
-                } catch (error) {
-                    console.error('خطأ في معالجة اختصار لوحة المفاتيح:', error);
-                }
-            });
-
-            // إضافة معالج خاص لأجهزة اللمس
-            if (isIOS) {
-                document.addEventListener('touchend', (e) => {
-                    // منع التكبير المزدوج
-                    e.preventDefault();
-                }, { passive: false });
-            }
-        }
-
         function isValidInteger(value) {
-            const trimmedValue = String(value).trim();
+            const trimmedValue = value.trim();
             if (trimmedValue === '') return false;
 
             const num = parseFloat(trimmedValue);
             return !isNaN(num) && Number.isInteger(num) && num > 0;
         }
-
         function recordVote() {
-            try {
-                const candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
-                const voteNumbers = [];
+            const candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
+            const voteNumbers = [];
 
-                // جمع أرقام المرشحين مع التحقق
-                for (let i = 1; i <= candidatesPerVote; i++) {
-                    const input = document.getElementById(`candidate${i}`);
-                    if (!input) {
-                        showError(`لا يمكن العثور على حقل المرشح رقم ${i}`);
-                        return;
+            // جمع أرقام المرشحين مع التحقق
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                const input = document.getElementById(`candidate${i}`);
+                const inputValue = input.value;
+
+                // التحقق من صحة الإدخال
+                if (!isValidInteger(inputValue)) {
+                    if (inputValue.trim() === '') {
+                        showError(`يرجى إدخال رقم المرشح رقم ${i}`);
+                    } else {
+                        showError(`يرجى إدخال رقم صحيح وموجب للمرشح رقم ${i}`);
                     }
-
-                    const inputValue = input.value;
-
-                    // التحقق من صحة الإدخال
-                    if (!isValidInteger(inputValue)) {
-                        if (inputValue.trim() === '') {
-                            showError(`يرجى إدخال رقم المرشح رقم ${i}`);
-                        } else {
-                            showError(`يرجى إدخال رقم صحيح وموجب للمرشح رقم ${i}`);
-                        }
-                        setTimeout(() => {
-                            input.focus();
-                            if (isIOS) input.click();
-                        }, 100);
-                        return;
-                    }
-
-                    const value = parseInt(inputValue);
-
-                    // التحقق من عدم التكرار
-                    if (voteNumbers.includes(value)) {
-                        showError(`لا يمكن تكرار نفس المرشح (${value}) في الصوت الواحد`);
-                        setTimeout(() => {
-                            input.focus();
-                            if (isIOS) input.click();
-                        }, 100);
-                        return;
-                    }
-
-                    voteNumbers.push(value);
+                    input.focus();
+                    return;
                 }
 
-                // التحقق من وجود المرشحين
-                for (let id of voteNumbers) {
-                    if (!(id in candidates)) {
-                        showError(`المرشح رقم ${id} غير موجود. يرجى إضافته أولاً`);
-                        for (let i = 1; i <= candidatesPerVote; i++) {
-                            const input = document.getElementById(`candidate${i}`);
-                            if (input && parseInt(input.value) === id) {
-                                setTimeout(() => {
-                                    input.focus();
-                                    if (isIOS) input.click();
-                                }, 100);
-                                break;
-                            }
-                        }
-                        return;
-                    }
+                const value = parseInt(inputValue);
+
+                // التحقق من عدم التكرار
+                if (voteNumbers.includes(value)) {
+                    showError(`لا يمكن تكرار نفس المرشح (${value}) في الصوت الواحد`);
+                    input.focus();
+                    return;
                 }
 
-                // تسجيل الأصوات
-                voteNumbers.forEach(num => {
-                    candidates[num] = (candidates[num] || 0) + 1;
-                });
-
-                validVotes.push([...voteNumbers]);
-                voteHistory.push({ type: 'valid', data: [...voteNumbers] });
-
-                // مسح الحقول
-                for (let i = 1; i <= candidatesPerVote; i++) {
-                    const input = document.getElementById(`candidate${i}`);
-                    if (input) input.value = '';
-                }
-
-                showSuccess(`تم تسجيل صوت صحيح للمرشحين: ${voteNumbers.join(', ')}`);
-                updateStats();
-                updateCandidatesTable();
-
-                const undoBtn = document.getElementById('undoBtn');
-                if (undoBtn) undoBtn.disabled = false;
-
-                focusFirstInput();
-
-            } catch (error) {
-                console.error('خطأ في تسجيل الصوت:', error);
-                showError('حدث خطأ في تسجيل الصوت');
+                voteNumbers.push(value);
             }
-        }
 
+            // التحقق من وجود المرشحين
+            for (let id of voteNumbers) {
+                if (!(id in candidates)) {
+                    showError(`المرشح رقم ${id} غير موجود. يرجى إضافته أولاً`);
+                    for (let i = 1; i <= candidatesPerVote; i++) {
+                        const input = document.getElementById(`candidate${i}`);
+                        if (parseInt(input.value) === id) {
+                            input.focus();
+                            break;
+                        }
+                    }
+                    return;
+                }
+            }
+
+            // تسجيل الأصوات
+            voteNumbers.forEach(num => {
+                candidates[num]++;
+            });
+
+            validVotes.push([...voteNumbers]);
+            voteHistory.push({ type: 'valid', data: [...voteNumbers] });
+
+            for (let i = 1; i <= candidatesPerVote; i++) {
+                document.getElementById(`candidate${i}`).value = '';
+            }
+
+            showSuccess(`تم تسجيل صوت صحيح للمرشحين: ${voteNumbers.join(', ')}`);
+            updateStats();
+            updateCandidatesTable();
+            document.getElementById('undoBtn').disabled = false;
+            document.getElementById('candidate1').focus();
+        }
+        // تسجيل صوت باطل
         function recordInvalidVote() {
-            try {
-                invalidVotesCount++;
-                voteHistory.push({ type: 'invalid' });
-                showSuccess('تم تسجيل صوت باطل');
-                updateStats();
+            invalidVotesCount++;
+            voteHistory.push({ type: 'invalid' });
+            showSuccess('تم تسجيل صوت باطل');
+            updateStats();
+            document.getElementById('undoBtn').disabled = false;
+            document.getElementById('candidate1').focus();
 
-                const undoBtn = document.getElementById('undoBtn');
-                if (undoBtn) undoBtn.disabled = false;
-
-                focusFirstInput();
-
-            } catch (error) {
-                console.error('خطأ في تسجيل الصوت الباطل:', error);
-                showError('حدث خطأ في تسجيل الصوت الباطل');
-            }
         }
 
+        // التراجع عن آخر صوت
         function undoLastVote() {
-            try {
-                if (voteHistory.length === 0) return;
+            if (voteHistory.length === 0) return;
 
-                const lastVote = voteHistory.pop();
+            const lastVote = voteHistory.pop();
 
-                if (lastVote.type === 'valid') {
-                    lastVote.data.forEach(candidateNum => {
-                        if (candidates[candidateNum]) {
-                            candidates[candidateNum]--;
-                            if (candidates[candidateNum] === 0) {
-                                delete candidates[candidateNum];
-                            }
-                        }
-                    });
-                    validVotes.pop();
-                    showSuccess('تم التراجع عن آخر صوت صحيح');
-                } else {
-                    invalidVotesCount = Math.max(0, invalidVotesCount - 1);
-                    showSuccess('تم التراجع عن آخر صوت باطل');
-                }
+            if (lastVote.type === 'valid') {
+                lastVote.data.forEach(candidateNum => {
+                    candidates[candidateNum]--;
+                    if (candidates[candidateNum] === 0) {
+                        delete candidates[candidateNum];
+                    }
+                });
+                validVotes.pop();
+                showSuccess('تم التراجع عن آخر صوت صحيح');
+                document.getElementById('candidate1').focus();
 
-                const undoBtn = document.getElementById('undoBtn');
-                if (undoBtn && voteHistory.length === 0) {
-                    undoBtn.disabled = true;
-                }
+            } else {
+                invalidVotesCount--;
+                showSuccess('تم التراجع عن آخر صوت باطل');
+                document.getElementById('candidate1').focus();
 
-                updateStats();
-                updateCandidatesTable();
-                focusFirstInput();
-
-            } catch (error) {
-                console.error('خطأ في التراجع:', error);
-                showError('حدث خطأ في التراجع');
             }
+
+            if (voteHistory.length === 0) {
+                document.getElementById('undoBtn').disabled = true;
+                document.getElementById('candidate1').focus();
+
+            }
+
+            updateStats();
+            updateCandidatesTable();
         }
 
         function showAddCandidateModal() {
-            const modal = document.getElementById('addCandidateModal');
-            if (modal) {
-                modal.style.display = 'block';
-                const input = document.getElementById('totalCandidatesInput');
-                if (input) {
-                    setTimeout(() => {
-                        input.focus();
-                        if (isIOS) input.click();
-                    }, 100);
-                }
-            }
+            document.getElementById('addCandidateModal').style.display = 'block';
         }
 
         function addCandidateinput() {
@@ -613,386 +429,269 @@
         }
 
         function addCandidates() {
-            try {
-                const totalCandidatesInput = document.getElementById('totalCandidatesInput');
-                if (!totalCandidatesInput) {
-                    showError('لا يمكن العثور على حقل الإدخال');
-                    return;
-                }
+            const totalCandidates = parseInt(document.getElementById('totalCandidatesInput').value);
 
-                const totalCandidates = parseInt(totalCandidatesInput.value);
-
-                if (!totalCandidates || totalCandidates <= 0) {
-                    showError('يرجى إدخال عدد صحيح من المرشحين');
-                    return;
-                }
-
-                for (let i = 1; i <= totalCandidates; i++) {
-                    if (!candidates[i]) {
-                        candidates[i] = 0;
-                    }
-                }
-
-                closeModal('addCandidateModal');
-                updateStats();
-                updateCandidatesTable();
-                showSuccess(`تم إضافة ${totalCandidates} مرشح`);
-                focusFirstInput();
-
-            } catch (error) {
-                console.error('خطأ في إضافة المرشحين:', error);
-                showError('حدث خطأ في إضافة المرشحين');
+            if (!totalCandidates || totalCandidates <= 0) {
+                alert('يرجى إدخال عدد صحيح من المرشحين');
+                return;
             }
+
+            for (let i = 1; i <= totalCandidates; i++) {
+                if (!candidates[i]) {
+                    candidates[i] = 0;
+                }
+            }
+
+            closeModal('addCandidateModal');
+            updateStats();
+            updateCandidatesTable();
+            showSuccess(`تم إضافة ${totalCandidates} مرشح`);
+            document.getElementById('candidate1').focus();
+
         }
 
         function showDeleteCandidateModal() {
-            const modal = document.getElementById('deleteCandidateModal');
-            if (modal) {
-                modal.style.display = 'block';
-                const input = document.getElementById('deleteCandidateInput');
-                if (input) {
-                    setTimeout(() => {
-                        input.focus();
-                        if (isIOS) input.click();
-                    }, 100);
-                }
-            }
+            document.getElementById('deleteCandidateModal').style.display = 'block';
         }
 
         function deleteCandidate() {
-            try {
-                const deleteCandidateInput = document.getElementById('deleteCandidateInput');
-                if (!deleteCandidateInput) {
-                    showError('لا يمكن العثور على حقل الإدخال');
-                    return;
-                }
+            const candidateNum = parseInt(document.getElementById('deleteCandidateInput').value);
 
-                const candidateNum = parseInt(deleteCandidateInput.value);
-
-                if (!candidateNum || !candidates[candidateNum]) {
-                    showError('المرشح غير موجود');
-                    return;
-                }
-
-                delete candidates[candidateNum];
-
-                validVotes = validVotes.filter(vote => !vote.includes(candidateNum));
-                voteHistory = voteHistory.filter(vote =>
-                    vote.type === 'invalid' || !vote.data.includes(candidateNum)
-                );
-
-                closeModal('deleteCandidateModal');
-                updateStats();
-                updateCandidatesTable();
-                showSuccess(`تم حذف المرشح رقم ${candidateNum}`);
-                focusFirstInput();
-
-            } catch (error) {
-                console.error('خطأ في حذف المرشح:', error);
-                showError('حدث خطأ في حذف المرشح');
+            if (!candidateNum || !candidates[candidateNum]) {
+                alert('المرشح غير موجود');
+                return;
             }
+
+            delete candidates[candidateNum];
+
+            validVotes = validVotes.filter(vote => !vote.includes(candidateNum));
+            voteHistory = voteHistory.filter(vote =>
+                vote.type === 'invalid' || !vote.data.includes(candidateNum)
+            );
+
+            closeModal('deleteCandidateModal');
+            updateStats();
+            updateCandidatesTable();
+            showSuccess(`تم حذف المرشح رقم ${candidateNum}`);
+            document.getElementById('candidate1').focus();
+
         }
 
         function resetAllVotes() {
-            try {
-                const confirmMessage = 'هل أنت متأكد من مسح جميع البيانات؟';
-                if (confirm(confirmMessage)) {
-                    candidates = {};
-                    validVotes = [];
-                    invalidVotesCount = 0;
-                    voteHistory = [];
+            if (confirm('هل أنت متأكد من مسح جميع البيانات؟')) {
+                candidates = {};
+                validVotes = [];
+                invalidVotesCount = 0;
+                voteHistory = [];
 
-                    const undoBtn = document.getElementById('undoBtn');
-                    if (undoBtn) undoBtn.disabled = true;
+                document.getElementById('undoBtn').disabled = true;
+                document.getElementById('manualTotalVotesInput').value = '';
 
-                    const manualTotalVotesInput = document.getElementById('manualTotalVotesInput');
-                    if (manualTotalVotesInput) manualTotalVotesInput.value = '';
+                updateStats();
+                updateCandidatesTable();
+                showSuccess('تم مسح جميع البيانات');
+                document.getElementById('candidate1').focus();
 
-                    updateStats();
-                    updateCandidatesTable();
-                    showSuccess('تم مسح جميع البيانات');
-                    focusFirstInput();
-                }
-            } catch (error) {
-                console.error('خطأ في مسح البيانات:', error);
-                showError('حدث خطأ في مسح البيانات');
             }
         }
 
         function updateStats() {
-            try {
-                const totalCandidatesCount = Object.keys(candidates).length;
-                const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
-                const totalVoteSetsCount = validVotes.length;
-                const castedVotes = totalVoteSetsCount + invalidVotesCount;
+            const totalCandidatesCount = Object.keys(candidates).length;
+            const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
+            const totalVoteSetsCount = validVotes.length;
+            const castedVotes = totalVoteSetsCount + invalidVotesCount;
+            const manualTotal = parseInt(document.getElementById('manualTotalVotesInput').value) || 0;
 
-                const manualTotalInput = document.getElementById('manualTotalVotesInput');
-                const manualTotal = manualTotalInput ? (parseInt(manualTotalInput.value) || 0) : 0;
-
-                const elements = {
-                    'totalCandidates': totalCandidatesCount,
-                    'totalVotes': manualTotal || totalVotesCount,
-                    'totalVoteSets': totalVoteSetsCount,
-                    'invalidVotes': invalidVotesCount,
-                    'castedVotes': castedVotes
-                };
-
-                for (const [id, value] of Object.entries(elements)) {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.textContent = value;
-                    }
-                }
-
-            } catch (error) {
-                console.error('خطأ في تحديث الإحصائيات:', error);
-            }
+            document.getElementById('totalCandidates').textContent = totalCandidatesCount;
+            document.getElementById('totalVotes').textContent = manualTotal || totalVotesCount;
+            document.getElementById('totalVoteSets').textContent = totalVoteSetsCount;
+            document.getElementById('invalidVotes').textContent = invalidVotesCount;
+            document.getElementById('castedVotes').textContent = castedVotes;
         }
 
+        // تحديث جدول المرشحين
         function updateCandidatesTable() {
-            try {
-                const tbody = document.getElementById('candidatesTableBody');
-                if (!tbody) {
-                    console.error('جدول المرشحين غير موجود');
-                    return;
-                }
+            const tbody = document.getElementById('candidatesTableBody');
+            tbody.innerHTML = '';
 
-                tbody.innerHTML = '';
+            const totalVotes = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
+            const sortedCandidates = Object.entries(candidates).sort((a, b) => b[1] - a[1]);
 
-                const totalVotes = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
-                const sortedCandidates = Object.entries(candidates).sort((a, b) => b[1] - a[1]);
-
-                sortedCandidates.forEach(([candidateNum, votes]) => {
-                    const percentage = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(2) : 0;
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                <td>${candidateNum}</td>
-                <td>${votes}</td>
-                <td>${percentage}%</td>
-            `;
-                    tbody.appendChild(row);
-                });
-
-            } catch (error) {
-                console.error('خطأ في تحديث جدول المرشحين:', error);
-            }
+            sortedCandidates.forEach(([candidateNum, votes]) => {
+                const percentage = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(2) : 0;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${candidateNum}</td>
+                    <td>${votes}</td>
+                    <td>${percentage}%</td>
+                `;
+                tbody.appendChild(row);
+            });
         }
 
         function showError(message) {
-            try {
-                const errorAlert = document.getElementById('errorAlert');
-                if (errorAlert) {
-                    errorAlert.textContent = message;
-                    errorAlert.style.display = 'block';
-                    setTimeout(() => {
-                        errorAlert.style.display = 'none';
-                    }, 5000);
-                } else {
-                    alert('خطأ: ' + message);
-                }
-            } catch (error) {
-                console.error('خطأ في عرض رسالة الخطأ:', error);
-                alert('خطأ: ' + message);
-            }
+            const errorAlert = document.getElementById('errorAlert');
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
         }
 
         function showSuccess(message) {
-            try {
-                const successAlert = document.getElementById('successAlert');
-                if (successAlert) {
-                    successAlert.textContent = message;
-                    successAlert.style.display = 'block';
-                    setTimeout(() => {
-                        successAlert.style.display = 'none';
-                    }, 3000);
-                } else {
-                    // عرض إشعار بسيط إذا لم يكن العنصر متاحاً
-                    console.log('نجح: ' + message);
-                }
-            } catch (error) {
-                console.error('خطأ في عرض رسالة النجاح:', error);
-            }
+            const successAlert = document.getElementById('successAlert');
+            successAlert.textContent = message;
+            successAlert.style.display = 'block';
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 3000);
         }
 
         function closeModal(modalId) {
-            try {
-                const modal = document.getElementById(modalId);
-                if (modal) {
+            document.getElementById(modalId).style.display = 'none';
+            document.getElementById('candidate1').focus();
+
+        }
+
+        window.onclick = function (event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let modal of modals) {
+                if (event.target === modal) {
                     modal.style.display = 'none';
+                    document.getElementById('candidate1').focus();
+
                 }
-                focusFirstInput();
-            } catch (error) {
-                console.error('خطأ في إغلاق النافذة المنبثقة:', error);
             }
         }
 
-        function closeAllModals() {
-            try {
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                recordVote();
+            }
+            else if (e.ctrlKey && e.key === 'z') {
+                e.preventDefault();
+                if (!document.getElementById('undoBtn').disabled) {
+                    undoLastVote();
+                }
+            }
+            else if (e.key === 'Escape') {
                 const modals = document.querySelectorAll('.modal');
                 modals.forEach(modal => {
                     if (modal.style.display === 'block') {
                         modal.style.display = 'none';
+                        document.getElementById('candidate1').focus();
                     }
                 });
-                focusFirstInput();
-            } catch (error) {
-                console.error('خطأ في إغلاق النوافذ المنبثقة:', error);
             }
-        }
+        });
 
-        // معالج النقر خارج النوافذ المنبثقة
-        window.onclick = function (event) {
-            try {
-                const modals = document.getElementsByClassName('modal');
-                for (let modal of modals) {
-                    if (event.target === modal) {
-                        modal.style.display = 'none';
-                        focusFirstInput();
-                    }
-                }
-            } catch (error) {
-                console.error('خطأ في معالج النقر:', error);
-            }
-        }
 
         function setupSaveLoadButtons() {
-            try {
-                const saveDataBtn = document.getElementById('saveDataBtn');
-                const loadDataBtn = document.getElementById('loadDataBtn');
+            const saveDataBtn = document.getElementById('saveDataBtn');
+            const loadDataBtn = document.getElementById('loadDataBtn');
 
-                if (saveDataBtn) {
-                    saveDataBtn.addEventListener("click", saveData);
-                }
+            if (saveDataBtn) {
+                saveDataBtn.addEventListener("click", () => {
+                    if (isProcessing) return;
+                    isProcessing = true;
 
-                if (loadDataBtn) {
-                    loadDataBtn.addEventListener("click", loadData);
-                }
+                    try {
+                        const dataToSave = {
+                            candidates: candidates,
+                            validVotes: validVotes,
+                            invalidVotesCount: invalidVotesCount,
+                            voteHistory: voteHistory,
+                            candidatesPerVote: candidatesPerVote,
+                            timestamp: new Date().toISOString()
+                        };
+                        localStorage.setItem("voteCounterData", JSON.stringify(dataToSave));
+                        alert("تم حفظ البيانات بنجاح");
+                    } catch (error) {
+                        alert("حدث خطأ أثناء حفظ البيانات: " + error.message);
+                    }
 
-            } catch (error) {
-                console.error('خطأ في إعداد أزرار الحفظ والاستعادة:', error);
-            }
-        }
-
-        function saveData() {
-            if (isProcessing) return;
-            isProcessing = true;
-
-            try {
-                const dataToSave = {
-                    candidates: candidates,
-                    validVotes: validVotes,
-                    invalidVotesCount: invalidVotesCount,
-                    voteHistory: voteHistory,
-                    candidatesPerVote: candidatesPerVote,
-                    timestamp: new Date().toISOString()
-                };
-
-                // التحقق من دعم localStorage
-                if (typeof (Storage) !== "undefined") {
-                    localStorage.setItem("voteCounterData", JSON.stringify(dataToSave));
-                    showSuccess("تم حفظ البيانات بنجاح");
-                } else {
-                    showError("المتصفح لا يدعم حفظ البيانات");
-                }
-
-            } catch (error) {
-                console.error('خطأ في حفظ البيانات:', error);
-                showError("حدث خطأ أثناء حفظ البيانات: " + error.message);
-            }
-
-            isProcessing = false;
-        }
-
-        function loadData() {
-            if (isProcessing) return;
-            isProcessing = true;
-
-            try {
-                if (typeof (Storage) === "undefined") {
-                    showError("المتصفح لا يدعم استعادة البيانات");
                     isProcessing = false;
-                    return;
-                }
-
-                const data = localStorage.getItem("voteCounterData");
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    candidates = parsed.candidates || {};
-                    validVotes = parsed.validVotes || [];
-                    invalidVotesCount = parsed.invalidVotesCount || 0;
-                    voteHistory = parsed.voteHistory || [];
-                    candidatesPerVote = parsed.candidatesPerVote || 1;
-
-                    // تحديث قيمة عدد المرشحين لكل صوت
-                    const candidatesPerVoteElement = document.getElementById('candidatesPerVote');
-                    if (candidatesPerVoteElement) {
-                        candidatesPerVoteElement.value = candidatesPerVote;
-                    }
-
-                    updateVotingForm();
-                    updateStats();
-                    updateCandidatesTable();
-
-                    // تحديث حالة زر التراجع
-                    const undoBtn = document.getElementById('undoBtn');
-                    if (undoBtn) {
-                        undoBtn.disabled = voteHistory.length === 0;
-                    }
-
-                    // عرض وقت آخر حفظ
-                    if (parsed.timestamp) {
-                        const saveDate = new Date(parsed.timestamp);
-                        const formattedDate = saveDate.toLocaleString('ar-EG');
-                        showSuccess(`تم استعادة البيانات بنجاح\nآخر حفظ: ${formattedDate}`);
-                    } else {
-                        showSuccess("تم استعادة البيانات بنجاح");
-                    }
-                } else {
-                    showError("لا توجد بيانات محفوظة");
-                }
-
-            } catch (error) {
-                console.error('خطأ في استعادة البيانات:', error);
-                showError("حدث خطأ أثناء استعادة البيانات: " + error.message);
+                });
             }
 
-            isProcessing = false;
-        }
+            if (loadDataBtn) {
+                loadDataBtn.addEventListener("click", () => {
+                    if (isProcessing) return;
+                    isProcessing = true;
 
-        function setupAutoSave() {
-            try {
-                setInterval(() => {
-                    const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
-                    if (!isProcessing && totalVotesCount > 0 && typeof (Storage) !== "undefined") {
-                        try {
-                            const dataToSave = {
-                                candidates: candidates,
-                                validVotes: validVotes,
-                                invalidVotesCount: invalidVotesCount,
-                                voteHistory: voteHistory,
-                                candidatesPerVote: candidatesPerVote,
-                                timestamp: new Date().toISOString()
-                            };
-                            localStorage.setItem("voteCounterData_auto", JSON.stringify(dataToSave));
-                            console.log("تم الحفظ التلقائي: " + new Date().toLocaleTimeString());
-                        } catch (error) {
-                            console.error("خطأ في الحفظ التلقائي: ", error);
+                    try {
+                        const data = localStorage.getItem("voteCounterData");
+                        if (data) {
+                            const parsed = JSON.parse(data);
+                            candidates = parsed.candidates || {};
+                            validVotes = parsed.validVotes || [];
+                            invalidVotesCount = parsed.invalidVotesCount || 0;
+                            voteHistory = parsed.voteHistory || [];
+                            candidatesPerVote = parsed.candidatesPerVote || 1;
+
+                            // تحديث قيمة عدد المرشحين لكل صوت
+                            const candidatesPerVoteElement = document.getElementById('candidatesPerVote');
+                            if (candidatesPerVoteElement) {
+                                candidatesPerVoteElement.value = candidatesPerVote;
+                            }
+
+                            updateVotingForm();
+                            updateStats();
+                            updateCandidatesTable();
+
+                            // تحديث حالة زر التراجع
+                            const undoBtn = document.getElementById('undoBtn');
+                            if (undoBtn) {
+                                undoBtn.disabled = voteHistory.length === 0;
+                            }
+
+                            // عرض وقت آخر حفظ
+                            if (parsed.timestamp) {
+                                const saveDate = new Date(parsed.timestamp);
+                                const formattedDate = saveDate.toLocaleString('ar-EG');
+                                alert(`تم استعادة البيانات بنجاح\nآخر حفظ: ${formattedDate}`);
+                            } else {
+                                alert("تم استعادة البيانات بنجاح");
+                            }
+                        } else {
+                            alert("لا توجد بيانات محفوظة");
                         }
+                    } catch (error) {
+                        alert("حدث خطأ أثناء استعادة البيانات: " + error.message);
                     }
-                }, 30000); // حفظ كل 30 ثانية
 
-            } catch (error) {
-                console.error('خطأ في إعداد الحفظ التلقائي:', error);
+                    isProcessing = false;
+                });
             }
         }
 
+        // إعداد الحفظ التلقائي
+        function setupAutoSave() {
+            setInterval(() => {
+                const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
+                if (!isProcessing && totalVotesCount > 0) {
+                    try {
+                        const dataToSave = {
+                            candidates: candidates,
+                            validVotes: validVotes,
+                            invalidVotesCount: invalidVotesCount,
+                            voteHistory: voteHistory,
+                            candidatesPerVote: candidatesPerVote,
+                            timestamp: new Date().toISOString()
+                        };
+                        localStorage.setItem("voteCounterData_auto", JSON.stringify(dataToSave));
+                        console.log("تم الحفظ التلقائي: " + new Date().toLocaleTimeString());
+                    } catch (error) {
+                        console.error("خطأ في الحفظ التلقائي: ", error);
+                    }
+                }
+            }, 30000);
+        }
+
+        // تحميل البيانات عند بدء التشغيل
         function loadDataOnStartup() {
             try {
-                if (typeof (Storage) === "undefined") {
-                    console.log("المتصفح لا يدعم localStorage");
-                    return;
-                }
-
                 const data = localStorage.getItem("voteCounterData");
                 if (data) {
                     const parsed = JSON.parse(data);
@@ -1013,194 +712,22 @@
                     if (undoBtn) {
                         undoBtn.disabled = voteHistory.length === 0;
                     }
-
-                    console.log("تم تحميل البيانات المحفوظة بنجاح");
                 }
-
             } catch (error) {
                 console.error("خطأ في استعادة البيانات عند التحميل: ", error);
             }
         }
 
-        // منع إغلاق الصفحة بالخطأ
+        // إضافة خاصية منع إغلاق الصفحة بالخطأ
         window.addEventListener('beforeunload', function (e) {
-            try {
-                const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
-                if (totalVotesCount > 0 && !isProcessing) {
-                    const message = 'لديك بيانات غير محفوظة. هل أنت متأكد من المغادرة؟';
-                    e.preventDefault();
-                    e.returnValue = message;
-                    return message;
-                }
-            } catch (error) {
-                console.error('خطأ في معالج beforeunload:', error);
+            const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
+            if (totalVotesCount > 0 && !isProcessing) {
+                e.preventDefault();
+                e.returnValue = 'لديك بيانات غير محفوظة. هل أنت متأكد من المغادرة؟';
+                return e.returnValue;
             }
         });
 
-        // إضافة معالجات خاصة بـ iOS للتعامل مع لوحة المفاتيح والتركيز
-        if (isIOS) {
-            // معالجة ظهور/اختفاء لوحة المفاتيح
-            window.addEventListener('resize', function () {
-                setTimeout(() => {
-                    const activeElement = document.activeElement;
-                    if (activeElement && activeElement.tagName === 'INPUT') {
-                        activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }, 300);
-            });
-
-            // منع التمرير عند التركيز على الحقول
-            document.addEventListener('focusin', function (e) {
-                if (e.target.tagName === 'INPUT') {
-                    setTimeout(() => {
-                        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 300);
-                }
-            });
-
-            // إضافة دعم أفضل للمس
-            document.addEventListener('touchend', function (e) {
-                // منع السلوك الافتراضي للتكبير المزدوج
-                let lastTouchEnd = 0;
-                const now = (new Date()).getTime();
-                if (now - lastTouchEnd <= 300) {
-                    e.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, false);
-        }
-
-        // دالة مساعدة للتحقق من صحة البيانات
-        function validateData() {
-            try {
-                // التحقق من وجود العناصر الأساسية
-                const requiredElements = [
-                    'candidatesPerVote',
-                    'votingInputs',
-                    'votingSectionTitle',
-                    'candidatesTableBody'
-                ];
-
-                for (const elementId of requiredElements) {
-                    if (!document.getElementById(elementId)) {
-                        console.warn(`العنصر ${elementId} غير موجود في الصفحة`);
-                        return false;
-                    }
-                }
-
-                return true;
-            } catch (error) {
-                console.error('خطأ في التحقق من صحة البيانات:', error);
-                return false;
-            }
-        }
-
-        // دالة للتنظيف عند إنهاء التطبيق
-        function cleanup() {
-            try {
-                // إزالة جميع مستمعات الأحداث
-                const inputs = document.querySelectorAll('input[type="number"]');
-                inputs.forEach(input => {
-                    input.removeEventListener('keypress', handleKeyPress);
-                    input.removeEventListener('input', handleInput);
-                    input.removeEventListener('focus', handleFocus);
-                    input.removeEventListener('blur', handleBlur);
-                    input.removeEventListener('touchstart', handleTouch);
-                });
-
-                console.log('تم تنظيف التطبيق بنجاح');
-            } catch (error) {
-                console.error('خطأ في تنظيف التطبيق:', error);
-            }
-        }
-
-        // إضافة دالة للتعامل مع الأخطاء العامة
-        window.addEventListener('error', function (e) {
-            console.error('خطأ عام في التطبيق:', e.error);
-            showError('حدث خطأ غير متوقع في التطبيق');
-        });
-
-        // إضافة دالة للتعامل مع الأخطاء غير المعالجة في الـ Promise
-        window.addEventListener('unhandledrejection', function (e) {
-            console.error('خطأ غير معالج في Promise:', e.reason);
-            showError('حدث خطأ في معالجة البيانات');
-        });
-
-        // دالة مساعدة لتسجيل معلومات المتصفح (للتشخيص)
-        function logBrowserInfo() {
-            console.log('معلومات المتصفح:', {
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                isIOS: isIOS,
-                localStorage: typeof (Storage) !== "undefined",
-                touchSupport: 'ontouchstart' in window
-            });
-        }
-
-        // تشغيل تسجيل معلومات المتصفح عند التحميل
-        document.addEventListener('DOMContentLoaded', function () {
-            logBrowserInfo();
-        });
-
-        // دوال إضافية لتحسين تجربة المستخدم على الموبايل
-
-        // منع التمرير المطاطي على iOS
-        document.addEventListener('touchmove', function (e) {
-            if (isIOS) {
-                const target = e.target;
-                const isScrollable = target.scrollHeight > target.clientHeight;
-
-                if (!isScrollable) {
-                    e.preventDefault();
-                }
-            }
-        }, { passive: false });
-
-        // تحسين الأداء عبر تقليل إعادة الرسم
-        function throttle(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // تطبيق throttling على تحديث الإحصائيات
-        const throttledUpdateStats = throttle(updateStats, 100);
-        const throttledUpdateCandidatesTable = throttle(updateCandidatesTable, 100);
-
-        // استبدال النداءات المباشرة بالنسخ المحسنة في الدوال الرئيسية
-        function recordVoteOptimized() {
-            // نفس كود recordVote لكن مع استخدام النسخ المحسنة
-            recordVote();
-            throttledUpdateStats();
-            throttledUpdateCandidatesTable();
-        }
-
-        // تصدير الدوال للاستخدام الخارجي إذا لزم الأمر
-        if (typeof module !== 'undefined' && module.exports) {
-            module.exports = {
-                recordVote,
-                recordInvalidVote,
-                undoLastVote,
-                addCandidates,
-                deleteCandidate,
-                resetAllVotes,
-                saveData,
-                loadData,
-                updateVotingForm,
-                showAddCandidateModal,
-                showDeleteCandidateModal,
-                closeModal
-            };
-        }
-
-        // رسالة تأكيد التحميل
-        console.log('تم تحميل نظام عد الأصوات بنجاح - متوافق مع iOS');
         async function exportToPDF(event) {
             if (event) event.preventDefault();
 
