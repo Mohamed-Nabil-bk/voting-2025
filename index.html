@@ -291,25 +291,38 @@
                 }
             }
         }
+        function isValidInteger(value) {
+            const trimmedValue = value.trim();
+            if (trimmedValue === '') return false;
 
-        // تسجيل صوت صحيح
+            const num = parseFloat(trimmedValue);
+            return !isNaN(num) && Number.isInteger(num) && num > 0;
+        }
         function recordVote() {
             const candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
             const voteNumbers = [];
 
-            // جمع أرقام المرشحين
+            // جمع أرقام المرشحين مع التحقق
             for (let i = 1; i <= candidatesPerVote; i++) {
                 const input = document.getElementById(`candidate${i}`);
-                const value = parseInt(input.value);
+                const inputValue = input.value;
 
-                if (!value || value <= 0) {
-                    showError(`يرجى إدخال رقم صحيح للمرشح ${i}`);
+                // التحقق من صحة الإدخال
+                if (!isValidInteger(inputValue)) {
+                    if (inputValue.trim() === '') {
+                        showError(`يرجى إدخال رقم المرشح رقم ${i}`);
+                    } else {
+                        showError(`يرجى إدخال رقم صحيح وموجب للمرشح رقم ${i}`);
+                    }
                     input.focus();
                     return;
                 }
 
+                const value = parseInt(inputValue);
+
+                // التحقق من عدم التكرار
                 if (voteNumbers.includes(value)) {
-                    showError('لا يمكن تكرار نفس المرشح في الصوت الواحد');
+                    showError(`لا يمكن تكرار نفس المرشح (${value}) في الصوت الواحد`);
                     input.focus();
                     return;
                 }
@@ -317,6 +330,7 @@
                 voteNumbers.push(value);
             }
 
+            // التحقق من وجود المرشحين
             for (let id of voteNumbers) {
                 if (!(id in candidates)) {
                     showError(`المرشح رقم ${id} غير موجود. يرجى إضافته أولاً`);
@@ -331,12 +345,14 @@
                 }
             }
 
+            // تسجيل الأصوات
             voteNumbers.forEach(num => {
                 candidates[num]++;
             });
 
             validVotes.push([...voteNumbers]);
             voteHistory.push({ type: 'valid', data: [...voteNumbers] });
+
             for (let i = 1; i <= candidatesPerVote; i++) {
                 document.getElementById(`candidate${i}`).value = '';
             }
@@ -346,9 +362,7 @@
             updateCandidatesTable();
             document.getElementById('undoBtn').disabled = false;
             document.getElementById('candidate1').focus();
-
         }
-
         // تسجيل صوت باطل
         function recordInvalidVote() {
             invalidVotesCount++;
