@@ -24,7 +24,7 @@
                 <h2 class="section-title">إعداد التصويت</h2>
                 <div class="voting-form">
                     <div class="input-group">
-                        <label class="stat-label"> إجمالي عدد الناخبين المقيدين باللجنة</labelباللجنة</label>
+                        <label class="stat-label">إجمالي عدد الناخبين المُقيّدين في اللجنة</label>
                         <input type="number" id="manualTotalVotesInput" placeholder="أدخل إجمالي الأصوات"
                             class="stat-input" oninput="updateStats()">
                     </div>
@@ -161,9 +161,11 @@
     <div id="addCandidateModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">تعيين عدد المرشحين</div>
-            <div class="input-group">
-                <label for="totalCandidatesInput">عدد المرشحين:</label>
-                <input type="number" id="totalCandidatesInput">
+            <div class="voting-form">
+                <div class="input-group">
+                    <label for="totalCandidatesInput2">عدد المرشحين:</label>
+                    <input type="number" id="totalCandidatesInput2" min="1" max="50">
+                </div>
             </div>
             <div class="button-group" style="margin-top: 20px;">
                 <button class="btn btn-primary" onclick="addCandidates()">تأكيد</button>
@@ -176,9 +178,11 @@
     <div id="deleteCandidateModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">حذف مرشح</div>
-            <div class="input-group">
-                <label for="deleteCandidateInput">رقم المرشح المراد حذفه:</label>
-                <input type="number" id="deleteCandidateInput">
+            <div class="voting-form">
+                <div class="input-group">
+                    <label for="deleteCandidateInput">أرقام المرشحين المراد حذفهم (مثال: 1, 3, 5):</label>
+                    <input type="text" id="deleteCandidateInput" placeholder="1, 3, 5">
+                </div>
             </div>
             <div class="button-group" style="margin-top: 20px;">
                 <button class="btn btn-danger" onclick="deleteCandidate()">حذف</button>
@@ -406,6 +410,7 @@
 
         function showAddCandidateModal() {
             document.getElementById('addCandidateModal').style.display = 'block';
+            document.getElementById('totalCandidatesInput2').focus();
         }
 
         function addCandidateinput() {
@@ -429,7 +434,7 @@
         }
 
         function addCandidates() {
-            const totalCandidates = parseInt(document.getElementById('totalCandidatesInput').value);
+            const totalCandidates = parseInt(document.getElementById('totalCandidatesInput2').value);
 
             if (!totalCandidates || totalCandidates <= 0) {
                 alert('يرجى إدخال عدد صحيح من المرشحين');
@@ -452,30 +457,53 @@
 
         function showDeleteCandidateModal() {
             document.getElementById('deleteCandidateModal').style.display = 'block';
+            document.getElementById('deleteCandidateInput').focus();
+
         }
 
         function deleteCandidate() {
-            const candidateNum = parseInt(document.getElementById('deleteCandidateInput').value);
+            const input = document.getElementById('deleteCandidateInput').value;
 
-            if (!candidateNum || !candidates[candidateNum]) {
-                alert('المرشح غير موجود');
+            if (!input.trim()) {
+                alert('يرجى إدخال أرقام المرشحين المطلوب حذفهم');
                 return;
             }
 
-            delete candidates[candidateNum];
+            // تقسيم الإدخال إلى أرقام بعد إزالة الفراغات
+            const candidateNumbers = input.split(',').map(num => parseInt(num.trim())).filter(num => !isNaN(num));
 
-            validVotes = validVotes.filter(vote => !vote.includes(candidateNum));
-            voteHistory = voteHistory.filter(vote =>
-                vote.type === 'invalid' || !vote.data.includes(candidateNum)
-            );
+            if (candidateNumbers.length === 0) {
+                alert('الرجاء إدخال أرقام صحيحة');
+                return;
+            }
+
+            let deletedCount = 0;
+            candidateNumbers.forEach(candidateNum => {
+                if (candidates.hasOwnProperty(candidateNum)) {
+                    delete candidates[candidateNum];
+                    deletedCount++;
+
+                    // إزالة المرشح من التصويتات والنتائج
+                    validVotes = validVotes.filter(vote => !vote.includes(candidateNum));
+                    voteHistory = voteHistory.filter(vote =>
+                        vote.type === 'invalid' || (Array.isArray(vote.data) && !vote.data.includes(candidateNum))
+                    );
+                }
+            });
 
             closeModal('deleteCandidateModal');
             updateStats();
             updateCandidatesTable();
-            showSuccess(`تم حذف المرشح رقم ${candidateNum}`);
-            document.getElementById('candidate1').focus();
 
+            if (deletedCount > 0) {
+                showSuccess(`تم حذف ${deletedCount} مرشح${deletedCount > 1 ? 'ين' : ''}`);
+            } else {
+                alert('لم يتم العثور على أي من المرشحين المحددين');
+            }
+
+            document.getElementById('candidate1').focus();
         }
+
 
         function resetAllVotes() {
             if (confirm('هل أنت متأكد من مسح جميع البيانات؟')) {
@@ -1006,7 +1034,7 @@
 
                 <div style="text-align: center; margin-top: 30px;">
                     <p style="font-size: 1.1rem; color: #444;">
-                        إهداء من المستشار <strong>محمد الحمراوي</strong> للسادة الأعضاء
+                        <span>إهداء من المستشار <strong>محمد الحمراوي</strong>، وكيل النيابة الإدارية، للسادة الأعضاء</span>
                     </p>
                 </div>
             `;
