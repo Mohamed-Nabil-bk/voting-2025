@@ -556,11 +556,11 @@
                 tbody.appendChild(row);
             });
         }
-
         function showError(message) {
             const errorAlert = document.getElementById('errorAlert');
             errorAlert.textContent = message;
             errorAlert.style.display = 'block';
+            errorAlert.scrollIntoView({ behavior: 'smooth' }); 
             setTimeout(() => {
                 errorAlert.style.display = 'none';
             }, 5000);
@@ -570,6 +570,7 @@
             const successAlert = document.getElementById('successAlert');
             successAlert.textContent = message;
             successAlert.style.display = 'block';
+            successAlert.scrollIntoView({ behavior: 'smooth' }); 
             setTimeout(() => {
                 successAlert.style.display = 'none';
             }, 3000);
