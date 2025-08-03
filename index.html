@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام فرز الأصوات الانتخابية</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <style>
-        .btn,.container{overflow:hidden}.btn-info:hover,.btn-primary:hover,.btn-secondary:hover,.btn-success:hover,.btn-warning:hover{transform:translateY(-2px)}.btn::before,.modal{top:0;height:100%;width:100%}.header,.modal-header,.stat-card{text-align:center}*{margin:0;padding:0;box-sizing:border-box}html{font-size:16px}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0,#764ba2 100%);min-height:100vh;padding:clamp(10px,2vw,20px);line-height:1.6}.container{max-width:1400px;width:100%;margin:0 auto;background:#fff;border-radius:clamp(8px,1.5vw,15px);box-shadow:0 20px 40px rgba(0,0,0,.1)}.header{background:linear-gradient(135deg,#2c3e50,#34495e);color:#fff;padding:clamp(20px,4vw,30px)}.candidates-table tr:hover,.section{background:#f8f9fa}.header p{font-size:clamp(1.5rem, 4vw, 2.5rem);font-weight:700;margin:0;text-shadow:2px 2px 4px rgba(0,0,0,.3)}.main-content{padding:clamp(15px,3vw,30px)}.section{margin-bottom:clamp(15px,2.5vw,25px);padding:clamp(15px,3vw,25px);border-radius:clamp(8px,1vw,12px);box-shadow:0 4px 6px rgba(0,0,0,.05);border-right:5px solid #667eea}.section-title{color:#2c3e50;font-size:clamp(1.2rem, 2.5vw, 1.5rem);margin-bottom:clamp(15px,2vw,20px);padding-bottom:10px;border-bottom:2px solid #ecf0f1;display:flex;align-items:center;gap:clamp(8px,1vw,10px);flex-wrap:wrap}.alert,.btn,.input-group label,.stat-label{font-size:clamp(.9rem, 1.5vw, 1rem)}.input-group label,.stat-number{margin-bottom:clamp(6px,1vw,8px)}.section-title::before{content:"📊";font-size:1.2em}.button-group{display:flex;gap:clamp(10px,2vw,15px);justify-content:center;flex-wrap:wrap;margin-top:clamp(15px,2vw,20px)}.btn{padding:clamp(10px,1.5vw,12px) clamp(20px,3vw,25px);border:none;border-radius:clamp(6px,1vw,8px);font-weight:600;cursor:pointer;transition:.3s;display:flex;align-items:center;gap:clamp(6px,1vw,8px);min-width:clamp(120px,20vw,150px);justify-content:center;flex:1 1 auto;max-width:200px;position:relative}.btn::before{content:'';position:absolute;left:-100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .6s}.btn:hover::before{left:100%}.btn-primary{background:linear-gradient(135deg,#667eea 0,#764ba2 100%);color:#fff;box-shadow:0 4px 15px rgba(102,126,234,.2)}.btn-primary:hover{box-shadow:0 8px 25px rgba(102,126,234,.4)}.btn-warning{background:linear-gradient(135deg,#ffecd2 0,#fcb69f 100%);color:#8b4513;box-shadow:0 4px 15px rgba(252,182,159,.3)}.btn-warning:hover{box-shadow:0 8px 25px rgba(252,182,159,.5)}.btn-info{background:linear-gradient(135deg,#4ecdc4 0,#44a08d 100%);color:#fff;box-shadow:0 4px 15px rgba(78,205,196,.3)}.btn-info:hover{box-shadow:0 8px 25px rgba(78,205,196,.5)}.btn-danger{background:linear-gradient(135deg,#ff9a9e 0,#fecfef 100%);color:#8b1538;box-shadow:0 4px 15px rgba(255,154,158,.3)}.btn-danger:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,154,158,.5)}.btn-secondary{background:linear-gradient(135deg,#a8edea 0,#fed6e3 100%);color:#4a5568;box-shadow:0 4px 15px rgba(168,237,234,.3)}.btn-secondary:hover{box-shadow:0 8px 25px rgba(168,237,234,.5)}.btn-success{background:linear-gradient(135deg,#84fab0 0,#8fd3f4 100%);color:#2d5a27;box-shadow:0 4px 15px rgba(132,250,176,.3)}.btn-success:hover{box-shadow:0 8px 25px rgba(132,250,176,.5)}.btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important;background:linear-gradient(135deg,#e2e8f0 0,#cbd5e0 100%)!important;color:#a0aec0!important;box-shadow:none!important}.btn:active:not(:disabled){transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.2)}@media (max-width:768px){.btn{min-width:clamp(100px,25vw,140px);padding:clamp(12px,2vw,14px) clamp(16px,2.5vw,20px)}}.stats-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(15px,2vw,20px)}.stat-card{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:clamp(20px,3vw,25px);border-radius:clamp(8px,1vw,12px);box-shadow:0 8px 16px rgba(102,126,234,.3);transition:transform .3s}.stat-card:hover{transform:translateY(-5px)}.stat-number{font-size:clamp(1.8rem, 4vw, 2.5rem);font-weight:700}.stat-label{opacity:.9}.alert{padding:clamp(12px,2vw,15px);border-radius:clamp(6px,1vw,8px);margin-bottom:clamp(15px,2vw,20px);display:none;font-weight:500}.alert-error{background:#ffebee;border-right:4px solid #e53935}.alert-success{background:#e8f5e8;border-right:4px solid #4caf50}.modal{display:none;position:fixed;z-index:1000;left:0;background-color:rgba(0,0,0,.5);padding:clamp(10px,2vw,20px)}.modal-content{background-color:#fff;margin:clamp(5%,10vh,15%) auto;padding:clamp(20px,4vw,30px);border-radius:clamp(8px,1vw,12px);width:100%;max-width:min(500px,95vw);box-shadow:0 20px 40px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto}.modal-header{font-size:clamp(1.3rem, 2.5vw, 1.5rem);font-weight:700;color:#2c3e50;margin-bottom:clamp(15px,2vw,20px)}.candidates-table{width:100%;border-collapse:collapse;margin-top:clamp(15px,2vw,20px);background:#fff;border-radius:clamp(6px,1vw,8px);overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1);font-size:clamp(.8rem, 1.2vw, 1rem)}.candidates-table td,.candidates-table th{padding:clamp(10px,2vw,15px);text-align:center;border-bottom:1px solid #ecf0f1}.candidates-table th{background:linear-gradient(135deg,#34495e,#2c3e50);color:#fff;font-weight:600}@media (max-width:575.98px){.stats-container,.voting-form{grid-template-columns:1fr}.button-group{flex-direction:column}.btn{max-width:none;min-width:auto}.candidates-table{font-size:.8rem}.candidates-table td,.candidates-table th{padding:8px 5px}}@media (min-width:576px) and (max-width:767.98px){.stats-container{grid-template-columns:repeat(2,1fr)}}@media (min-width:768px) and (max-width:991.98px){.stats-container,.voting-form{grid-template-columns:repeat(2,1fr)}}@media (min-width:992px) and (max-width:1199.98px){.stats-container,.voting-form{grid-template-columns:repeat(3,1fr)}}@media (min-width:1200px){.stats-container,.voting-form{grid-template-columns:repeat(4,1fr)}}@media (min-width:1400px){.container{max-width:1400px}}@media print{body{background:#fff;padding:0}.container{box-shadow:none;border-radius:0}.btn,.modal{display:none!important}}@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){.header p{text-shadow:1px 1px 2px rgba(0,0,0,.3)}}@media (max-width:767.98px) and (orientation:landscape){.modal-content{margin:2% auto;max-height:95vh}}@media (prefers-reduced-motion:reduce){*{animation-duration:0s!important;animation-iteration-count:1!important;transition-duration:0s!important}.btn:hover,.stat-card:hover{transform:none}}.btn:focus-visible,.input-group input:focus-visible,.input-group select:focus-visible{outline:#667eea solid 3px;outline-offset:2px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.voting-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:clamp(15px,2vw,20px)}.voting-form .input-group{display:flex;flex-direction:column;min-width:0}.voting-form .input-group label{font-weight:600;color:#34495e;margin-bottom:8px}.voting-form .input-group input,.voting-form .input-group select{padding:clamp(10px,1.5vw,12px) clamp(12px,2vw,15px);border:2px solid #ddd;border-radius:clamp(6px,1vw,8px);font-size:clamp(.9rem, 1.5vw, 1rem);transition:.3s;background:#fff;width:100%}.voting-form .input-group input:focus,.voting-form .input-group select:focus{outline:0;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.1)}.vote-recording{max-width:600px;margin:20px auto}.vote-recording .input-group{display:flex;align-items:center;margin-bottom:12px;border:1px solid #ddd;border-radius:8px;overflow:hidden;background:#fff;transition:.3s}.vote-recording .input-group:hover{border-color:#007bff;box-shadow:0 2px 8px rgba(0,123,255,.15)}.vote-recording .input-group:focus-within{border-color:#007bff;box-shadow:0 0 0 3px rgba(0,123,255,.1);transform:scale(1.01)}.vote-recording .input-group label{background-color:#f8f9fa;padding:12px 20px;margin:0;font-weight:600;color:#495057;border-right:1px solid #ddd;white-space:nowrap;min-width:100px;text-align:left;font-size:14px}.vote-recording .input-group input{flex:1;border:none;padding:12px 15px;font-size:16px;outline:0;background:0 0;color:#495057}.vote-recording .input-group input:focus{background-color:#f8f9ff}.vote-recording .input-group input::placeholder{color:#adb5bd;opacity:1}.vote-recording.colored .input-group:nth-child(odd) label{background-color:#e3f2fd}.vote-recording.colored .input-group:nth-child(2n) label{background-color:#f3e5f5}@media screen and (max-width:768px){.vote-recording .input-group label{min-width:70px;padding:10px 12px;font-size:13px}.vote-recording .input-group input{padding:10px 12px;font-size:16px}}.floating-alert{position:fixed;top:20px;right:20px;z-index:9999;padding:15px 20px;border-radius:8px;color:#fff;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.2);min-width:250px;max-width:90%;opacity:1;transition:opacity .6s;direction:rtl}.alert-success{background-color:#cff7d9;color:#155724;border:1px solid #c3e6cb;z-index:9999}.alert-error{background-color:#f8d7da;color:#721c24;border:1px solid #f5c6cb;z-index:9000}
+        #qr-reader button,#qr-reader button[id*=start]{background:linear-gradient(45deg,#4caf50,#45a049)!important;box-shadow:0 4px 15px rgba(76,175,80,.3)!important}#qr-reader button:hover,#qr-reader button[id*=start]:hover{box-shadow:0 6px 20px rgba(76,175,80,.4)!important}.btn,.close{cursor:pointer}.disclaimer-footer,.header,.modal-header,.scan-status,.stat-card{text-align:center}#qrSummary,body{line-height:1.6}#qrCanvas,#qrVideo{max-width:100%;height:auto}#qrInfo,#scanResult{padding:20px;margin:15px 0;text-align:right}.btn,.container{overflow:hidden}.btn-info:hover,.btn-primary:hover,.btn-secondary:hover,.btn-success:hover,.btn-warning:hover{transform:translateY(-2px)}.btn::before,.modal{top:0;height:100%;width:100%}*{margin:0;padding:0;box-sizing:border-box}html{font-size:16px}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0,#764ba2 100%);min-height:100vh;padding:clamp(10px,2vw,20px)}.container{max-width:1400px;width:100%;margin:0 auto;background:#fff;border-radius:clamp(8px,1.5vw,15px);box-shadow:0 20px 40px rgba(0,0,0,.1)}.header{background:linear-gradient(135deg,#2c3e50,#34495e);color:#fff;padding:clamp(20px,4vw,30px)}.candidates-table tr:hover,.section{background:#f8f9fa}.header p{font-size:clamp(1.5rem, 4vw, 2.5rem);font-weight:700;margin:0;text-shadow:2px 2px 4px rgba(0,0,0,.3)}.main-content{padding:clamp(15px,3vw,30px)}.section{margin-bottom:clamp(15px,2.5vw,25px);padding:clamp(15px,3vw,25px);border-radius:clamp(8px,1vw,12px);box-shadow:0 4px 6px rgba(0,0,0,.05);border-right:5px solid #667eea}.section-title{color:#2c3e50;font-size:clamp(1.2rem, 2.5vw, 1.5rem);margin-bottom:clamp(15px,2vw,20px);padding-bottom:10px;border-bottom:2px solid #ecf0f1;display:flex;align-items:center;gap:clamp(8px,1vw,10px);flex-wrap:wrap}.alert,.btn,.input-group label,.stat-label{font-size:clamp(.9rem, 1.5vw, 1rem)}.input-group label,.stat-number{margin-bottom:clamp(6px,1vw,8px)}.section-title::before{content:"📊";font-size:1.2em}.button-group{display:flex;gap:clamp(10px,2vw,15px);justify-content:center;flex-wrap:wrap;margin-top:clamp(15px,2vw,20px)}.btn{padding:clamp(10px,1.5vw,12px) clamp(20px,3vw,25px);border:none;border-radius:clamp(6px,1vw,8px);font-weight:600;transition:.3s;display:flex;align-items:center;gap:clamp(6px,1vw,8px);min-width:clamp(120px,20vw,150px);justify-content:center;flex:1 1 auto;max-width:200px;position:relative}.btn::before{content:'';position:absolute;left:-100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .6s}.btn:hover::before{left:100%}.btn-primary{background:linear-gradient(135deg,#667eea 0,#764ba2 100%);color:#fff;box-shadow:0 4px 15px rgba(102,126,234,.2)}.btn-primary:hover{box-shadow:0 8px 25px rgba(102,126,234,.4)}.btn-warning{background:linear-gradient(135deg,#ffecd2 0,#fcb69f 100%);color:#8b4513;box-shadow:0 4px 15px rgba(252,182,159,.3)}.btn-warning:hover{box-shadow:0 8px 25px rgba(252,182,159,.5)}.btn-info{background:linear-gradient(135deg,#4ecdc4 0,#44a08d 100%);color:#fff;box-shadow:0 4px 15px rgba(78,205,196,.3)}.btn-info:hover{box-shadow:0 8px 25px rgba(78,205,196,.5)}.btn-danger{background:linear-gradient(135deg,#ff9a9e 0,#fecfef 100%);color:#8b1538;box-shadow:0 4px 15px rgba(255,154,158,.3)}.btn-danger:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,154,158,.5)}.btn-secondary{background:linear-gradient(135deg,#a8edea 0,#fed6e3 100%);color:#4a5568;box-shadow:0 4px 15px rgba(168,237,234,.3)}.btn-secondary:hover{box-shadow:0 8px 25px rgba(168,237,234,.5)}.btn-success{background:linear-gradient(135deg,#84fab0 0,#8fd3f4 100%);color:#2d5a27;box-shadow:0 4px 15px rgba(132,250,176,.3)}.btn-success:hover{box-shadow:0 8px 25px rgba(132,250,176,.5)}.btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important;background:linear-gradient(135deg,#e2e8f0 0,#cbd5e0 100%)!important;color:#a0aec0!important;box-shadow:none!important}.btn-finish:active,.btn-scan:active,.btn:active:not(:disabled){transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.2)}@media (max-width:768px){.btn{min-width:clamp(100px,25vw,140px);padding:clamp(12px,2vw,14px) clamp(16px,2.5vw,20px)}}.stats-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:clamp(15px,2vw,20px)}.stat-card{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:clamp(20px,3vw,25px);border-radius:clamp(8px,1vw,12px);box-shadow:0 8px 16px rgba(102,126,234,.3);transition:transform .3s}.stat-card:hover{transform:translateY(-5px)}.stat-number{font-size:clamp(1.8rem, 4vw, 2.5rem);font-weight:700}.stat-label{opacity:.9}.alert{padding:clamp(12px,2vw,15px);border-radius:clamp(6px,1vw,8px);margin-bottom:clamp(15px,2vw,20px);display:none;font-weight:500}.alert-error{background:#ffebee;border-right:4px solid #e53935}.alert-success{background:#e8f5e8;border-right:4px solid #4caf50}.modal{display:none;position:fixed;z-index:1000;left:0;background-color:rgba(0,0,0,.5);padding:clamp(10px,2vw,20px)}.modal-content{background-color:#fff;margin:clamp(5%,10vh,15%) auto;padding:clamp(20px,4vw,30px);border-radius:clamp(8px,1vw,12px);width:100%;max-width:min(500px,95vw);box-shadow:0 20px 40px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto}.modal-header{font-size:clamp(1.3rem, 2.5vw, 1.5rem);font-weight:700}.table-container{position:relative;max-height:400px;overflow-y:auto;overflow-x:auto;scroll-behavior:smooth}.table-container::-webkit-scrollbar{width:8px;height:8px}.table-container::-webkit-scrollbar-track{background:#f1f1f1;border-radius:4px}.table-container::-webkit-scrollbar-thumb{background:#888;border-radius:4px}.table-container::-webkit-scrollbar-thumb:hover{background:#555}.candidates-table{width:100%;border-collapse:collapse;margin-top:clamp(15px,2vw,20px);background:#fff;border-radius:clamp(6px,1vw,8px);overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1);font-size:clamp(.8rem, 1.2vw, 1rem)}.candidates-table td,.candidates-table th{padding:clamp(10px,2vw,15px);text-align:center;border-bottom:1px solid #ecf0f1}.candidates-table th{background:linear-gradient(135deg,#34495e,#2c3e50);color:#fff;font-weight:600}@media (max-width:575.98px){.stats-container,.voting-form{grid-template-columns:1fr}.button-group{flex-direction:column}.btn{max-width:none;min-width:auto}.candidates-table{font-size:.8rem}.candidates-table td,.candidates-table th{padding:8px 5px}}@media (min-width:576px) and (max-width:767.98px){.stats-container{grid-template-columns:repeat(2,1fr)}}@media (min-width:768px) and (max-width:991.98px){.stats-container,.voting-form{grid-template-columns:repeat(2,1fr)}}@media (min-width:992px) and (max-width:1199.98px){.stats-container,.voting-form{grid-template-columns:repeat(3,1fr)}}@media (min-width:1200px){.stats-container,.voting-form{grid-template-columns:repeat(4,1fr)}}@media (min-width:1400px){.container{max-width:1400px}}@media print{body{background:#fff;padding:0}.container{box-shadow:none;border-radius:0}.btn,.modal{display:none!important}}@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){.header p{text-shadow:1px 1px 2px rgba(0,0,0,.3)}}@media (max-width:767.98px) and (orientation:landscape){.modal-content{margin:2% auto;max-height:95vh}}@media (prefers-reduced-motion:reduce){*{animation-duration:0s!important;animation-iteration-count:1!important;transition-duration:0s!important}.btn:hover,.stat-card:hover{transform:none}}.btn:focus-visible,.input-group input:focus-visible,.input-group select:focus-visible{outline:#667eea solid 3px;outline-offset:2px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.btn-finish,.btn-scan{padding:15px 25px;font-weight:600;transition:.3s;min-width:200px;font-size:1.1rem;color:#fff}.voting-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:clamp(15px,2vw,20px)}.voting-form .input-group{display:flex;flex-direction:column;min-width:0}.voting-form .input-group label{font-weight:600;color:#34495e;margin-bottom:8px}.voting-form .input-group input,.voting-form .input-group select{padding:clamp(10px,1.5vw,12px) clamp(12px,2vw,15px);border:2px solid #ddd;border-radius:clamp(6px,1vw,8px);font-size:clamp(.9rem, 1.5vw, 1rem);transition:.3s;background:#fff;width:100%}.voting-form .input-group input:focus,.voting-form .input-group select:focus{outline:0;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.1)}.vote-recording{max-width:600px;margin:20px auto}.vote-recording .input-group{display:flex;align-items:center;margin-bottom:12px;border:1px solid #ddd;border-radius:8px;overflow:hidden;background:#fff;transition:.3s}.vote-recording .input-group:hover{border-color:#007bff;box-shadow:0 2px 8px rgba(0,123,255,.15)}.vote-recording .input-group:focus-within{border-color:#007bff;box-shadow:0 0 0 3px rgba(0,123,255,.1);transform:scale(1.01)}.vote-recording .input-group label{background-color:#f8f9fa;padding:12px 20px;margin:0;font-weight:600;color:#495057;border-right:1px solid #ddd;white-space:nowrap;min-width:100px;text-align:left;font-size:14px}.vote-recording .input-group input{flex:1;border:none;padding:12px 15px;font-size:16px;outline:0;background:0 0;color:#495057}.vote-recording .input-group input:focus{background-color:#f8f9ff}.vote-recording .input-group input::placeholder{color:#adb5bd;opacity:1}.vote-recording.colored .input-group:nth-child(odd) label{background-color:#e3f2fd}.vote-recording.colored .input-group:nth-child(2n) label{background-color:#f3e5f5}@media screen and (max-width:768px){.vote-recording .input-group label{min-width:70px;padding:10px 12px;font-size:13px}.vote-recording .input-group input{padding:10px 12px;font-size:16px}}.btn-finish{background:linear-gradient(45deg,#28a745,#20c997);border:none;border-radius:12px;box-shadow:0 4px 15px rgba(40,167,69,.4)}.btn-finish:hover{background:linear-gradient(45deg,#218838,#1ea085);transform:translateY(-2px);box-shadow:0 6px 20px rgba(40,167,69,.6)}.btn-scan{background:linear-gradient(45deg,#007bff,#6610f2);border:none;border-radius:12px;box-shadow:0 4px 15px rgba(0,123,255,.4)}.btn-scan:hover{background:linear-gradient(45deg,#0056b3,#520dc2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,123,255,.6)}#qrCanvas{border:3px solid #e9ecef;border-radius:15px;margin:20px 0;box-shadow:0 8px 25px rgba(0,0,0,.1);background:#fff}#qrInfo{background:linear-gradient(135deg,#f8f9fa 0,#e9ecef 100%);border-radius:12px;border:1px solid #dee2e6;box-shadow:inset 0 2px 4px rgba(0,0,0,.06)}#qrInfo strong{color:#495057;font-size:1.1rem;display:block;margin-bottom:10px}#qrSummary{color:#6c757d}#qrVideo{border:3px solid #dee2e6;border-radius:15px;background:#000;box-shadow:0 8px 25px rgba(0,0,0,.2)}#scanStatus{margin:20px 0;padding:15px;background:linear-gradient(135deg,#f0f0f0 0,#e8e8e8 100%);border-radius:10px;border:1px solid #ddd;font-weight:500;color:#495057}#scanResult{background:linear-gradient(135deg,#d4edda 0,#c3e6cb 100%);color:#155724;border-radius:12px;border:1px solid #c3e6cb;box-shadow:0 4px 15px rgba(40,167,69,.1);animation:.5s ease-out slideInRight}@keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}@media (max-width:768px){.btn-finish,.btn-scan{min-width:150px;padding:12px 20px;font-size:1rem;margin:5px}#qrCanvas{max-width:280px;margin:15px 0}#qrVideo{max-width:300px}#qrInfo,#scanResult{padding:15px;margin:10px 0;font-size:.9rem}}@media (max-width:480px){.btn-finish,.btn-scan{min-width:120px;padding:10px 15px;font-size:.9rem}#qrCanvas,#qrVideo{max-width:250px}#qrInfo strong{font-size:1rem}#scanStatus{padding:12px;font-size:.9rem}}.modal-content::-webkit-scrollbar{width:6px}.modal-content::-webkit-scrollbar-track{background:#f1f1f1;border-radius:3px}.modal-content::-webkit-scrollbar-thumb{background:#c1c1c1;border-radius:3px}.modal-content::-webkit-scrollbar-thumb:hover{background:#a8a8a8}.loading{position:relative}.loading::after{content:'';position:absolute;top:50%;left:50%;width:20px;height:20px;margin:-10px 0 0 -10px;border:2px solid #f3f3f3;border-top:2px solid #3498db;border-radius:50%;animation:1s linear infinite spin}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.floating-alert{position:fixed;top:20px;right:20px;z-index:9999;padding:15px 20px;border-radius:8px;color:#fff;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.2);min-width:250px;max-width:90%;opacity:1;transition:opacity .6s;direction:rtl}.alert-success{background-color:#cff7d9;color:#155724;border:1px solid #c3e6cb;z-index:9999}.alert-error{background-color:#f8d7da;color:#721c24;border:1px solid #f5c6cb;z-index:9000}.modal-header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;margin:5% auto;padding:0;border:none;border-radius:20px;width:90%;max-width:500px}#qr-reader{margin:20px 0;border-radius:15px;overflow:hidden}#qr-reader button{border:none!important;color:#fff!important;padding:12px 24px!important;font-size:14px!important;font-weight:600!important;border-radius:25px!important;cursor:pointer!important;transition:.3s!important;margin:8px 4px!important;min-width:140px!important}#qr-reader button:hover{transform:translateY(-2px)!important}#qr-reader button[id*=permission]{background:linear-gradient(45deg,#2196f3,#1976d2)!important;box-shadow:0 4px 15px rgba(33,150,243,.3)!important}#qr-reader button[id*=permission]:hover{box-shadow:0 6px 20px rgba(33,150,243,.4)!important}#qr-reader button[id*=stop]{background:linear-gradient(45deg,#f44336,#d32f2f)!important;box-shadow:0 4px 15px rgba(244,67,54,.3)!important}#qr-reader button[id*=stop]:hover{box-shadow:0 6px 20px rgba(244,67,54,.4)!important}#qr-reader div[id*=header_message]{background:linear-gradient(45deg,#ff9800,#f57c00)!important;color:#fff!important;border:none!important;border-radius:15px!important;padding:12px 20px!important;margin:15px 0!important;font-size:14px!important;font-weight:500!important;box-shadow:0 4px 15px rgba(255,152,0,.3)!important;text-align:center!important}.scan-status{padding:12px 20px;border-radius:15px;margin:15px 0;font-weight:500;transition:.3s}.scan-status.info{background:linear-gradient(45deg,#2196f3,#1976d2);color:#fff;box-shadow:0 4px 15px rgba(33,150,243,.3)}.scan-status.success{background:linear-gradient(45deg,#4caf50,#45a049);color:#fff;box-shadow:0 4px 15px rgba(76,175,80,.3)}.scan-status.error{background:linear-gradient(45deg,#f44336,#d32f2f);color:#fff;box-shadow:0 4px 15px rgba(244,67,54,.3)}#qr-reader video{border-radius:15px!important;max-width:100%!important}.close{position:relative;top:15px;left:20px;font-size:20px;font-weight:700;color:#fff;transition:.3s;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,0,0,.5);z-index:1000}.close:hover{background:#f44336;transform:rotate(90deg)}.disclaimer-section{background:linear-gradient(135deg,#ff9a9e 0,#fecfef 50%,#fecfef 100%);border:2px solid #e74c3c;border-radius:15px;padding:25px;margin:20px 0;box-shadow:0 10px 25px rgba(231,76,60,.15);position:relative;overflow:hidden}.disclaimer-section::before{content:'⚠️';position:absolute;top:-10px;right:-10px;font-size:60px;opacity:.1;transform:rotate(15deg)}.disclaimer-header{display:flex;align-items:center;margin-bottom:20px;color:#c0392b;font-size:22px;font-weight:700}.disclaimer-header .icon{font-size:28px;margin-left:15px;animation:2s infinite pulse}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}.disclaimer-content{color:#2c3e50;line-height:1.8;font-size:16px}.disclaimer-content ul{margin:15px 0;padding-right:25px}.disclaimer-content li{margin:10px 0;position:relative}.disclaimer-content li::before{content:'🔸';position:absolute;right:-20px;color:#e74c3c}.disclaimer-footer{background:rgba(231,76,60,.1);border-radius:10px;padding:15px;margin-top:20px;font-weight:700;color:#c0392b;border:1px dashed #e74c3c}.important-note{background:#fff3cd;border:1px solid #ffeaa7;border-radius:8px;padding:15px;margin:15px 0;color:#856404}.important-note .icon{font-size:20px;margin-left:10px}@media (max-width:768px){.disclaimer-section{padding:20px;margin:15px 0}.disclaimer-header{font-size:20px}.disclaimer-content{font-size:15px}}
     </style>
 </head>
 
@@ -18,7 +17,6 @@
         <div class="header">
             <p>🗳️ نظام فرز الأصوات الانتخابية</p>
         </div>
-
         <div class="main-content">
             <div class="section">
                 <h2 class="section-title">إعداد التصويت</h2>
@@ -53,23 +51,18 @@
                             <option value="15">15 مرشح</option>
                         </select>
                     </div>
-
                 </div>
             </div>
-
-            <!-- قسم التصويت -->
             <div class="section">
                 <h2 class="section-title" id="votingSectionTitle">تسجيل الصوت الصحيح (2 مرشحين)</h2>
                 <div class="alert alert-error" id="errorAlert"></div>
                 <div class="alert alert-success" id="successAlert"></div>
-
                 <div class="vote-recording colored" id="votingInputs">
                     <div class="input-group">
                         <label class="text-align" for="candidate1">1</label>
                         <input type="number" id="candidate1" placeholder="رقم المرشح">
                     </div>
                 </div>
-
                 <div class="button-group">
                     <button class="btn btn-primary" onclick="recordVote()">
                         ✅ صوت صحيح
@@ -88,31 +81,36 @@
                     <button class="btn btn-info" id="loadDataBtn">
                         📂 استعادة البيانات
                     </button>
-                    <button class="btn btn-secondary" id="exportPdfBtn">
+                    <!-- <button class="btn btn-secondary" id="exportPdfBtn">
                         📄 تصدير النتائج
-                    </button>
+                    </button> -->
                 </div>
             </div>
-
-            <!-- قسم إدارة المرشحين -->
             <div class="section">
                 <h2 class="section-title">إدارة المرشحين</h2>
                 <div class="button-group">
                     <button class="btn btn-success" onclick="showAddCandidateModal()">
                         ➕👥 إضافة مرشح
                     </button>
-
                     <button class="btn btn-warning" onclick="showDeleteCandidateModal()">
                         ➖👤 حذف مرشح
                     </button>
-
                     <button class="btn btn-secondary" onclick="resetAllVotes()">
                         🧹 مسح الكل
                     </button>
                 </div>
             </div>
-
-            <!-- قسم الإحصائيات -->
+            <div class="section">
+                <h2 class="section-title">إنهاء التصويت</h2>
+                <div class="button-group">
+                    <button class="btn btn-primary" id="finishBtn" onclick="showFinishModal()">
+                        🏁 إنهاء وإنشاء QR
+                    </button>
+                    <button class="btn btn-info" onclick="showQRScannerModal()">
+                        📱 ماسح QR (رئيس اللجنة)
+                    </button>
+                </div>
+            </div>
             <div class="section">
                 <h2 class="section-title">الإحصائيات العامة</h2>
                 <div class="stats-container">
@@ -138,26 +136,65 @@
                     </div>
                 </div>
             </div>
-
-            <!-- قسم نتائج المرشحين -->
             <div class="section" id="resultsSection">
                 <h2 class="section-title">نتائج المرشحين</h2>
-                <table class="candidates-table" id="candidatesTable">
-                    <thead>
-                        <tr>
-                            <th>رقم المرشح</th>
-                            <th>عدد الأصوات</th>
-                            <th>النسبة المئوية</th>
-                        </tr>
-                    </thead>
-                    <tbody id="candidatesTableBody">
-                    </tbody>
-                </table>
+                <div class="table-container">
+                    <table class="candidates-table" id="candidatesTable">
+                        <thead>
+                            <tr>
+                                <th>رقم المرشح</th>
+                                <th>عدد الأصوات</th>
+                                <th>النسبة المئوية</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidatesTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="disclaimer-section">
+            <div class="disclaimer-header">
+                <span class="icon">⚠️</span>
+                <span>تنويه هام - إخلاء المسؤولية</span>
+            </div>
+            <div class="disclaimer-content">
+                <div class="important-note">
+                    <span class="icon">📋</span>
+                    <strong>هذا النظام مخصص للاستخدام كأداة مساعدة فقط في عملية فرز الأصوات الانتخابية</strong>
+                </div>
+                <p><strong>يُرجى قراءة التنويه التالي بعناية:</strong></p>
+                <ul>
+                    <li><strong>أداة مساعدة:</strong> هذا النظام هو أداة مساعدة لتسهيل عملية الفرز وليس بديلاً عن
+                        الإجراءات
+                        الرسمية المعتمدة</li>
+
+                    <li><strong>المسؤولية القانونية:</strong> المطور غير مسؤول عن أي أخطاء في النتائج أو سوء استخدام
+                        للنظام
+                    </li>
+
+                    <li><strong>التحقق المطلوب:</strong> يجب التحقق من جميع النتائج يدوياً والرجوع للإجراءات الرسمية
+                        المعتمدة</li>
+
+                    <li><strong>الدقة:</strong> لا يضمن المطور دقة النتائج بنسبة 100% وقد تحدث أخطاء تقنية</li>
+
+                    <li><strong>الاستخدام الشخصي:</strong> يتحمل المستخدم كامل المسؤولية عن كيفية استخدام هذا النظام
+                    </li>
+
+                    <li><strong>عدم الضمان:</strong> لا يوجد ضمان على استمرارية عمل النظام أو خلوه من الأخطاء</li>
+
+                    <li><strong>البيانات:</strong> المطور غير مسؤول عن فقدان أو تلف البيانات المُدخلة في النظام</li>
+                </ul>
+                <div class="important-note">
+                    <span class="icon">⚖️</span>
+                    <strong>الالتزام بالقوانين المحلية والإجراءات الرسمية المعتمدة أمر إلزامي</strong>
+                </div>
+            </div>
+            <div class="disclaimer-footer">
+                ⚠️ باستخدام هذا النظام، أنت توافق على جميع الشروط المذكورة أعلاه ⚠️
             </div>
         </div>
     </div>
-
-    <!-- Modal لإضافة المرشحين -->
     <div id="addCandidateModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">تعيين عدد المرشحين</div>
@@ -173,8 +210,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal لحذف المرشح -->
     <div id="deleteCandidateModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">حذف مرشح</div>
@@ -190,14 +225,67 @@
             </div>
         </div>
     </div>
+    <div id="finishModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">إنهاء الفرز وإنشاء QR Code</div>
+            <div style="text-align: center; padding: 20px;">
+                <p>تم إنشاء QR Code يحتوي على جميع بيانات الأصوات</p>
+                <canvas id="qrCanvas" style="border: 2px solid #ddd; margin: 20px 0;"></canvas>
+                <p style="color: #75ce63; font-size: 14px;">
+                    <strong>يمكن لرئيس اللجنة مسح هذا الكود لدمج النتائج</strong>
+                </p>
+                <div id="qrInfo" style="background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: right;">
+                    <strong>معلومات الفرز:</strong><br>
+                    <span id="qrSummary"></span>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="downloadQR()">💾 تحميل QR</button>
+                <button class="btn btn-secondary" onclick="closeModal('finishModal')">إغلاق</button>
+            </div>
+        </div>
+    </div>
+    <div id="qrScannerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeQRScannerModal()">&times;</span>
+            <div class="modal-header">مسح QR Code</div>
+            <div id="qr-reader" style="width: 100%; margin: 15px 0;"></div>
+            <div style="text-align: center; margin: 15px 0;">
+                <input type="file" id="qrFileInput" accept="image/*" style="display:none">
+            </div>
+            <div class="button-group" style="margin-top: 20px;">
+                <button onclick="startHTML5QRScanner()" class="btn btn-primary">
+                    📹 بدء المسح
+                </button>
 
+                <button onclick="uploadQRImage()" class="btn btn-info">
+                    🖼️ رفع صورة QR
+                </button>
+
+                <button onclick="closeQRScannerModal()" class="btn btn-secondary">
+                    ❌ إغلاق
+                </button>
+            </div>
+            <div id="scanStatus" class="scan-status">جاري تشغيل الماسح...</div>
+            <div id="scanResult" style="display:none; margin-top: 15px;"></div>
+            <div class="button-group" style="margin-top: 20px;">
+                <button id="mergeDataBtn" onclick="mergeScannedData()" style="display:none;" class="btn btn-primary">🔄
+                    دمج البيانات</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         let candidates = {};
         let validVotes = [];
         let invalidVotesCount = 0;
         let voteHistory = [];
         let isProcessing = false;
-
+        let qrScanner = null;
+        let scannedData = null;
+        let isScanning = false;
+        let html5QrcodeScanner = null;
         document.addEventListener('DOMContentLoaded', function () {
             setupSaveLoadButtons();
             setupAutoSave();
@@ -212,68 +300,37 @@
                 }
             });
         });
-
         function updateVotingForm() {
             candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
             const votingInputs = document.getElementById('votingInputs');
             const votingSectionTitle = document.getElementById('votingSectionTitle');
-
-            // تحديث العنوان
             const candidateText = candidatesPerVote === 1 ? 'مرشح واحد' :
                 candidatesPerVote === 2 ? 'مرشحان' :
                     `${candidatesPerVote} مرشحين`;
             votingSectionTitle.textContent = `تسجيل الصوت الصحيح (${candidateText})`;
-
-            // مسح الحقول الموجودة
             votingInputs.innerHTML = '';
-
-            // إنشاء الحقول الجديدة
             for (let i = 1; i <= candidatesPerVote; i++) {
                 const inputGroup = document.createElement('div');
                 inputGroup.className = 'input-group';
-
                 const label = document.createElement('label');
                 label.setAttribute('for', `candidate${i}`);
                 label.textContent = getOrdinalText(i) + '-';
-
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.id = `candidate${i}`;
                 input.placeholder = 'رقم المرشح';
-
                 inputGroup.appendChild(label);
                 inputGroup.appendChild(input);
                 votingInputs.appendChild(inputGroup);
             }
-
             setupInputEventListeners();
-
             document.getElementById('candidate1').focus();
         }
-
-        // الحصول على النص الترتيبي للأرقام
         function getOrdinalText(number) {
-            const ordinals = {
-                1: '1',
-                2: '2',
-                3: '3',
-                4: '4',
-                5: '5',
-                6: '6',
-                7: '7',
-                8: '8',
-                9: '9',
-                10: '10',
-                11: '11',
-                12: '12',
-                13: '13',
-                14: '14',
-                15: '15'
-            };
-            return ordinals[number] || `المرشح رقم ${number}`;
+            return (Number.isInteger(number) && number >= 1 && number <= 15)
+                ? number.toString()
+                : `المرشح رقم ${number}`;
         }
-
-        // إعداد مستمعات الأحداث للحقول
         function setupInputEventListeners() {
             for (let i = 1; i <= candidatesPerVote; i++) {
                 const input = document.getElementById(`candidate${i}`);
@@ -301,13 +358,9 @@
         function recordVote() {
             const candidatesPerVote = parseInt(document.getElementById('candidatesPerVote').value);
             const voteNumbers = [];
-
-            // جمع أرقام المرشحين مع التحقق
             for (let i = 1; i <= candidatesPerVote; i++) {
                 const input = document.getElementById(`candidate${i}`);
                 const inputValue = input.value;
-
-                // التحقق من صحة الإدخال
                 if (!isValidInteger(inputValue)) {
                     if (inputValue.trim() === '') {
                         showError(`يرجى إدخال رقم المرشح رقم ${i}`);
@@ -317,10 +370,7 @@
                     input.focus();
                     return;
                 }
-
                 const value = parseInt(inputValue);
-
-                // التحقق من عدم التكرار
                 if (voteNumbers.includes(value)) {
                     showError(`لا يمكن تكرار نفس المرشح (${value}) في الصوت الواحد`);
                     input.focus();
@@ -329,8 +379,6 @@
 
                 voteNumbers.push(value);
             }
-
-            // التحقق من وجود المرشحين
             for (let id of voteNumbers) {
                 if (!(id in candidates)) {
                     showError(`المرشح رقم ${id} غير موجود. يرجى إضافته أولاً`);
@@ -344,26 +392,20 @@
                     return;
                 }
             }
-
-            // تسجيل الأصوات
             voteNumbers.forEach(num => {
                 candidates[num]++;
             });
-
             validVotes.push([...voteNumbers]);
             voteHistory.push({ type: 'valid', data: [...voteNumbers] });
-
             for (let i = 1; i <= candidatesPerVote; i++) {
                 document.getElementById(`candidate${i}`).value = '';
             }
-
             showSuccess(`تم تسجيل صوت صحيح للمرشحين: ${voteNumbers.join(', ')}`);
             updateStats();
             updateCandidatesTable();
             document.getElementById('undoBtn').disabled = false;
             document.getElementById('candidate1').focus();
         }
-        // تسجيل صوت باطل
         function recordInvalidVote() {
             invalidVotesCount++;
             voteHistory.push({ type: 'invalid' });
@@ -373,13 +415,9 @@
             document.getElementById('candidate1').focus();
 
         }
-
-        // التراجع عن آخر صوت
         function undoLastVote() {
             if (voteHistory.length === 0) return;
-
             const lastVote = voteHistory.pop();
-
             if (lastVote.type === 'valid') {
                 lastVote.data.forEach(candidateNum => {
                     candidates[candidateNum]--;
@@ -390,161 +428,120 @@
                 validVotes.pop();
                 showSuccess('تم التراجع عن آخر صوت صحيح');
                 document.getElementById('candidate1').focus();
-
             } else {
                 invalidVotesCount--;
                 showSuccess('تم التراجع عن آخر صوت باطل');
                 document.getElementById('candidate1').focus();
-
             }
-
             if (voteHistory.length === 0) {
                 document.getElementById('undoBtn').disabled = true;
                 document.getElementById('candidate1').focus();
-
             }
-
             updateStats();
             updateCandidatesTable();
         }
-
         function showAddCandidateModal() {
             document.getElementById('addCandidateModal').style.display = 'block';
             document.getElementById('totalCandidatesInput2').focus();
         }
-
         function addCandidateinput() {
             const totalCandidates = parseInt(document.getElementById('totalCandidatesInput').value);
-
             if (!totalCandidates || totalCandidates <= 0) {
                 alert('يرجى إدخال عدد صحيح من المرشحين');
                 return;
             }
-
             for (let i = 1; i <= totalCandidates; i++) {
                 if (!candidates[i]) {
                     candidates[i] = 0;
                 }
             }
-
             updateStats();
             updateCandidatesTable();
             showSuccess(`تم إضافة ${totalCandidates} مرشح`);
-
         }
-
         function addCandidates() {
             const totalCandidates = parseInt(document.getElementById('totalCandidatesInput2').value);
-
             if (!totalCandidates || totalCandidates <= 0) {
                 alert('يرجى إدخال عدد صحيح من المرشحين');
                 return;
             }
-
             for (let i = 1; i <= totalCandidates; i++) {
                 if (!candidates[i]) {
                     candidates[i] = 0;
                 }
             }
-
             closeModal('addCandidateModal');
             updateStats();
             updateCandidatesTable();
             showSuccess(`تم إضافة ${totalCandidates} مرشح`);
             document.getElementById('candidate1').focus();
-
         }
-
         function showDeleteCandidateModal() {
             document.getElementById('deleteCandidateModal').style.display = 'block';
             document.getElementById('deleteCandidateInput').focus();
-
         }
-
         function deleteCandidate() {
             const input = document.getElementById('deleteCandidateInput').value;
-
             if (!input.trim()) {
                 alert('يرجى إدخال أرقام المرشحين المطلوب حذفهم');
                 return;
             }
-
-            // تقسيم الإدخال إلى أرقام بعد إزالة الفراغات
             const candidateNumbers = input.split(',').map(num => parseInt(num.trim())).filter(num => !isNaN(num));
-
             if (candidateNumbers.length === 0) {
                 alert('الرجاء إدخال أرقام صحيحة');
                 return;
             }
-
             let deletedCount = 0;
             candidateNumbers.forEach(candidateNum => {
                 if (candidates.hasOwnProperty(candidateNum)) {
                     delete candidates[candidateNum];
                     deletedCount++;
-
-                    // إزالة المرشح من التصويتات والنتائج
-                    // validVotes = validVotes.filter(vote => !vote.includes(candidateNum));
                     voteHistory = voteHistory.filter(vote =>
                         vote.type === 'invalid' || (Array.isArray(vote.data) && !vote.data.includes(candidateNum))
                     );
                 }
             });
-
             closeModal('deleteCandidateModal');
             updateStats();
             updateCandidatesTable();
-
             if (deletedCount > 0) {
                 showSuccess(`تم حذف ${deletedCount} مرشح${deletedCount > 1 ? 'ين' : ''}`);
             } else {
                 alert('لم يتم العثور على أي من المرشحين المحددين');
             }
-
             document.getElementById('candidate1').focus();
         }
-
-
         function resetAllVotes() {
             if (confirm('هل أنت متأكد من مسح جميع البيانات؟')) {
                 candidates = {};
                 validVotes = [];
                 invalidVotesCount = 0;
                 voteHistory = [];
-
                 document.getElementById('undoBtn').disabled = true;
                 document.getElementById('manualTotalVotesInput').value = '';
-
                 updateStats();
                 updateCandidatesTable();
                 showSuccess('تم مسح جميع البيانات');
                 document.getElementById('candidate1').focus();
-
             }
         }
-
         function updateStats() {
             const totalCandidatesCount = Object.keys(candidates).length;
             const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
             const totalVoteSetsCount = validVotes.length;
             const castedVotes = totalVoteSetsCount + invalidVotesCount;
             const manualTotal = parseInt(document.getElementById('manualTotalVotesInput').value) || 0;
-
             document.getElementById('totalCandidates').textContent = totalCandidatesCount;
             document.getElementById('totalVotes').textContent = manualTotal || totalVotesCount;
             document.getElementById('totalVoteSets').textContent = totalVoteSetsCount;
             document.getElementById('invalidVotes').textContent = invalidVotesCount;
             document.getElementById('castedVotes').textContent = castedVotes;
         }
-
-        // تحديث جدول المرشحين
         function updateCandidatesTable() {
             const tbody = document.getElementById('candidatesTableBody');
             tbody.innerHTML = '';
-
             const totalVotes = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
             const sortedCandidates = Object.entries(candidates).sort((a, b) => b[1] - a[1]);
-
             sortedCandidates.forEach(([candidateNum, votes]) => {
                 const percentage = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(2) : 0;
                 const row = document.createElement('tr');
@@ -556,53 +553,40 @@
                 tbody.appendChild(row);
             });
         }
-        
         function showAlert(message, type = 'success') {
             const toast = document.createElement('div');
             toast.className = 'floating-alert';
-
             if (type === 'error') {
                 toast.classList.add('alert-error');
             } else {
                 toast.classList.add('alert-success');
             }
-
             toast.textContent = message;
             document.body.appendChild(toast);
-
-            // إخفاء الرسالة بعد مدة
             setTimeout(() => {
                 toast.style.opacity = '0';
                 setTimeout(() => toast.remove(), 600);
             }, 3000);
         }
-
         function showSuccess(message) {
             showAlert(message, 'success');
         }
-
         function showError(message) {
             showAlert(message, 'error');
         }
-
-
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
             document.getElementById('candidate1').focus();
-
         }
-
         window.onclick = function (event) {
             const modals = document.getElementsByClassName('modal');
             for (let modal of modals) {
                 if (event.target === modal) {
                     modal.style.display = 'none';
                     document.getElementById('candidate1').focus();
-
                 }
             }
         }
-
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'Enter') {
                 e.preventDefault();
@@ -624,17 +608,13 @@
                 });
             }
         });
-
-
         function setupSaveLoadButtons() {
             const saveDataBtn = document.getElementById('saveDataBtn');
             const loadDataBtn = document.getElementById('loadDataBtn');
-
             if (saveDataBtn) {
                 saveDataBtn.addEventListener("click", () => {
                     if (isProcessing) return;
                     isProcessing = true;
-
                     try {
                         const dataToSave = {
                             candidates: candidates,
@@ -649,16 +629,13 @@
                     } catch (error) {
                         alert("حدث خطأ أثناء حفظ البيانات: " + error.message);
                     }
-
                     isProcessing = false;
                 });
             }
-
             if (loadDataBtn) {
                 loadDataBtn.addEventListener("click", () => {
                     if (isProcessing) return;
                     isProcessing = true;
-
                     try {
                         const data = localStorage.getItem("voteCounterData");
                         if (data) {
@@ -668,24 +645,17 @@
                             invalidVotesCount = parsed.invalidVotesCount || 0;
                             voteHistory = parsed.voteHistory || [];
                             candidatesPerVote = parsed.candidatesPerVote || 1;
-
-                            // تحديث قيمة عدد المرشحين لكل صوت
                             const candidatesPerVoteElement = document.getElementById('candidatesPerVote');
                             if (candidatesPerVoteElement) {
                                 candidatesPerVoteElement.value = candidatesPerVote;
                             }
-
                             updateVotingForm();
                             updateStats();
                             updateCandidatesTable();
-
-                            // تحديث حالة زر التراجع
                             const undoBtn = document.getElementById('undoBtn');
                             if (undoBtn) {
                                 undoBtn.disabled = voteHistory.length === 0;
                             }
-
-                            // عرض وقت آخر حفظ
                             if (parsed.timestamp) {
                                 const saveDate = new Date(parsed.timestamp);
                                 const formattedDate = saveDate.toLocaleString('ar-EG');
@@ -704,8 +674,6 @@
                 });
             }
         }
-
-        // إعداد الحفظ التلقائي
         function setupAutoSave() {
             setInterval(() => {
                 const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
@@ -727,8 +695,6 @@
                 }
             }, 30000);
         }
-
-        // تحميل البيانات عند بدء التشغيل
         function loadDataOnStartup() {
             try {
                 const data = localStorage.getItem("voteCounterData");
@@ -739,14 +705,10 @@
                     invalidVotesCount = parsed.invalidVotesCount || 0;
                     voteHistory = parsed.voteHistory || [];
                     candidatesPerVote = parsed.candidatesPerVote || 1;
-
-                    // تحديث قيمة عدد المرشحين لكل صوت
                     const candidatesPerVoteElement = document.getElementById('candidatesPerVote');
                     if (candidatesPerVoteElement) {
                         candidatesPerVoteElement.value = candidatesPerVote;
                     }
-
-                    // تحديث حالة زر التراجع
                     const undoBtn = document.getElementById('undoBtn');
                     if (undoBtn) {
                         undoBtn.disabled = voteHistory.length === 0;
@@ -756,8 +718,6 @@
                 console.error("خطأ في استعادة البيانات عند التحميل: ", error);
             }
         }
-
-        // إضافة خاصية منع إغلاق الصفحة بالخطأ
         window.addEventListener('beforeunload', function (e) {
             const totalVotesCount = Object.values(candidates).reduce((sum, votes) => sum + votes, 0);
             if (totalVotesCount > 0 && !isProcessing) {
@@ -766,289 +726,692 @@
                 return e.returnValue;
             }
         });
-
-        async function exportToPDF(event) {
-            if (event) event.preventDefault();
-
-            const exportBtn = document.getElementById('exportPdfBtn');
-            const originalText = exportBtn.innerHTML;
-
-            // تعطيل الزر وعرض مؤشر التحميل
-            exportBtn.disabled = true;
-            exportBtn.innerHTML = '⏳ جاري التصدير...';
+        function showFinishModal() {
+            if (Object.keys(candidates).length === 0) {
+                alert('❌ لا توجد بيانات للإنهاء');
+                return;
+            }
+            const qrData = {
+                timestamp: new Date().toISOString(),
+                candidates: candidates,
+                invalidVotesCount: invalidVotesCount,
+                totalVoteSets: validVotes.length, 
+                committeeInfo: {
+                    totalRegistered: parseInt(document.getElementById('manualTotalVotesInput')?.value) || 0,
+                    castedVotes: validVotes.length + invalidVotesCount,
+                    candidatesPerVote: parseInt(document.getElementById('candidatesPerVote')?.value) || 1
+                },
+                systemVersion: "2.0",
+                dataIntegrity: true,
+                stats: {
+                    candidatesCount: Object.keys(candidates).length,
+                    validVotesTotal: validVotes.length,
+                    invalidVotesTotal: invalidVotesCount,
+                    totalVotes: validVotes.length + invalidVotesCount
+                }
+            };
             try {
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
+                const dataString = JSON.stringify(qrData);
+                const dataSizeKB = Math.round((dataString.length * 2) / 1024); 
+                let qrLevel = 'M';
+                let qrSize = 300;
 
-                // جلب البيانات
-                const totalCandidates = document.getElementById('totalCandidates').textContent;
-                const totalVotes = document.getElementById('totalVotes').textContent;
-                const totalVoteSets = document.getElementById('totalVoteSets').textContent;
-                const invalidVotes = document.getElementById('invalidVotes').textContent;
-                const manualTotal = document.getElementById('manualTotalVotesInput').value || 'غير محدد';
-                const tableBody = document.getElementById('candidatesTableBody');
-
-                const reportDate = new Date().toLocaleDateString('ar-EG', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                let candidatesData = [];
-                if (tableBody && tableBody.children.length > 0) {
-                    candidatesData = Array.from(tableBody.children).map(row => ({
-                        number: row.children[0].textContent,
-                        votes: row.children[1].textContent,
-                        percentage: row.children[2].textContent
-                    }));
+                if (dataSizeKB > 2) {
+                    qrLevel = 'L'; 
+                    qrSize = 400;
+                } else if (dataSizeKB > 1) {
+                    qrLevel = 'M'; 
+                    qrSize = 350;
+                } else {
+                    qrLevel = 'Q'; 
+                    qrSize = 300;
                 }
-
-                const candidatePages = [];
-                let currentIndex = 0;
-
-                if (candidatesData.length > 0) {
-                    const firstPageCount = Math.min(7, candidatesData.length);
-                    candidatePages.push(candidatesData.slice(0, firstPageCount));
-                    currentIndex = firstPageCount;
+                const canvas = document.getElementById('qrCanvas');
+                if (canvas && typeof QRious !== 'undefined') {
+                    try {
+                        const qr = new QRious({
+                            element: canvas,
+                            value: dataString,
+                            size: qrSize,
+                            level: qrLevel,
+                            foreground: '#000000',
+                            background: '#ffffff'
+                        });
+                        console.log(`✅ تم إنشاء QR Code بنجاح - الحجم: ${dataSizeKB}KB, المستوى: ${qrLevel}`);
+                    } catch (qrError) {
+                        console.warn('⚠️ فشل في إنشاء QR Code بالمستوى الحالي، محاولة بمستوى أقل...');
+                        const qr = new QRious({
+                            element: canvas,
+                            value: dataString,
+                            size: Math.min(qrSize + 100, 500),
+                            level: 'L', 
+                            foreground: '#000000',
+                            background: '#ffffff'
+                        });
+                        console.log('✅ تم إنشاء QR Code بمستوى L');
+                    }
                 }
+                const candidatesList = Object.entries(candidates)
+                    .sort(([, a], [, b]) => b - a) 
+                    .map(([id, votes]) => `<div style="display: flex; justify-content: space-between; margin: 2px 0;">
+                        <span>المرشح ${id}:</span> 
+                        <span style="font-weight: bold; color: #007bff;">${votes.toLocaleString('ar-EG')} صوت</span>
+                    </div>`)
+                    .join('');
 
-                while (currentIndex < candidatesData.length) {
-                    const nextPageCount = Math.min(14, candidatesData.length - currentIndex);
-                    candidatePages.push(candidatesData.slice(currentIndex, currentIndex + nextPageCount));
-                    currentIndex += nextPageCount;
+                const summary = `
+                    <div style="text-align: right; line-height: 1.8; font-size: 16px;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <h4 style="margin: 0 0 10px 0; color: #495057;">📊 ملخص النتائج النهائية</h4>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin: 10px 0;">
+                                <div>🗳️ عدد المرشحين: <strong style="color: #007bff;">${Object.keys(candidates).length}</strong></div>
+                                <div>✅ الأصوات الصحيحة: <strong style="color: #28a745;">${validVotes.length.toLocaleString('ar-EG')}</strong></div>
+                                <div>❌ الأصوات الباطلة: <strong style="color: #dc3545;">${invalidVotesCount.toLocaleString('ar-EG')}</strong></div>
+                                <div>📋 إجمالي الأصوات: <strong style="color: #6c757d;">${(validVotes.length + invalidVotesCount).toLocaleString('ar-EG')}</strong></div>
+                            </div>
+                            
+                            <div style="font-size: 14px; color: #6c757d; margin-top: 10px;">
+                                📅 وقت الإنشاء: ${new Date().toLocaleString('ar-EG')} <br>
+                                📦 حجم البيانات: ${dataSizeKB}KB | 🔧 مستوى QR: ${qrLevel}
+                            </div>
+                        </div>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeaa7; text-align: center;">
+                            <strong style="color: #856404;">⚠️ هام:</strong><br>
+                            <span style="color: #856404;">
+                                اضغط على "دمج البيانات" أدناه لإضافة هذه النتائج إلى البيانات الحالية في النظام
+                            </span>
+                        </div>
+                    </div>
+                `;
+                const summaryDiv = document.getElementById('qrSummary');
+                if (summaryDiv) {
+                    summaryDiv.innerHTML = summary;
                 }
-
-                let pageHtml = createFirstPageHTML(reportDate, totalCandidates, totalVotes, totalVoteSets, invalidVotes, candidatePages[0] || [], 1);
-                await addPageToPDF(pdf, pageHtml, true);
-
-                let serialStart = candidatePages[0] ? candidatePages[0].length + 1 : 1;
-                for (let i = 1; i < candidatePages.length; i++) {
-                    pdf.addPage();
-                    pageHtml = createCandidatesPageHTML(candidatePages[i], i + 1, candidatePages.length, serialStart);
-                    await addPageToPDF(pdf, pageHtml, false);
-                    serialStart += candidatePages[i].length;
+                const modal = document.getElementById('finishModal');
+                if (modal) {
+                    modal.style.display = 'block';
                 }
-
-                if (candidatePages.length > 0) {
-                    pdf.addPage();
-                    pageHtml = createFinalPageHTML(reportDate);
-                    await addPageToPDF(pdf, pageHtml, false);
+                window.currentQRData = qrData;
+                console.log('✅ تم إنشاء QR Code والملخص بنجاح');
+            } catch (error) {
+                console.error('❌ خطأ في إنشاء QR Code:', error);
+                let errorMessage = '❌ حدث خطأ في إنشاء QR Code:\n';
+                if (error.message.includes('too much data')) {
+                    errorMessage += 'البيانات كبيرة جداً لـ QR Code. يرجى تقليل عدد الأصوات أو تقسيم البيانات.';
+                } else if (error.message.includes('QRious')) {
+                    errorMessage += 'مكتبة QR Code غير متوفرة. يرجى التأكد من تحميل المكتبة.';
+                } else {
+                    errorMessage += error.message;
                 }
+                alert(errorMessage);
+                try {
+                    const basicSummary = `
+                        <div style="text-align: right; padding: 20px;">
+                            <h4>📊 ملخص النتائج (بدون QR Code)</h4>
+                            <p>🏷️ عدد المرشحين: ${Object.keys(candidates).length}</p>
+                            <p>✅ الأصوات الصحيحة: ${validVotes.length}</p>  
+                            <p>❌ الأصوات الباطلة: ${invalidVotesCount}</p>
+                            <p>📋 إجمالي الأصوات: ${validVotes.length + invalidVotesCount}</p>
+                            <div style="color: red; margin-top: 15px;">
+                                ⚠️ لم يتم إنشاء QR Code بسبب خطأ تقني
+                            </div>
+                        </div>
+                    `;
+                    const summaryDiv = document.getElementById('qrSummary');
+                    if (summaryDiv) {
+                        summaryDiv.innerHTML = basicSummary;
+                    }
+                    const modal = document.getElementById('finishModal');
+                    if (modal) {
+                        modal.style.display = 'block';
+                    }
+                } catch (summaryError) {
+                    console.error('❌ خطأ في عرض الملخص:', summaryError);
+                }
+            }
+        }
+        function downloadQR() {
+            try {
+                const canvas = document.getElementById('qrCanvas');
+                if (!canvas) {
+                    alert('❌ لم يتم العثور على QR Code للتحميل');
+                    return;
+                }
+                const link = document.createElement('a');
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                link.download = `voting-results-${timestamp}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
 
-                const fileName = `تقرير_النتائج_${new Date().toISOString().split('T')[0]}.pdf`;
-                pdf.save(fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
 
-                showAlert('تم تصدير التقرير بنجاح!', 'success');
+                showSuccess('✅ تم تحميل QR Code بنجاح!');
 
             } catch (error) {
-                console.error('خطأ في تصدير PDF:', error);
-                showAlert('حدث خطأ أثناء تصدير التقرير', 'error');
-            } finally {
-                exportBtn.disabled = false;
-                exportBtn.innerHTML = originalText;
+                console.error('Download Error:', error);
+                alert('❌ حدث خطأ في تحميل QR Code: ' + error.message);
             }
         }
-        document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
-
-        async function addPageToPDF(pdf, htmlContent, isFirstPage) {
-            const container = document.createElement('div');
-            container.style.cssText = `
-                position: absolute;
-                left: -9999px;
-                top: 0;
-                width: 794px;
-                background: white;
-                padding: 40px;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                direction: rtl;
-                color: #333;
-                line-height: 1.6;
-            `;
-
-            container.innerHTML = htmlContent;
-            document.body.appendChild(container);
-
-            const canvas = await html2canvas(container, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff',
-                scrollX: 0,
-                scrollY: 0
-            });
-
-            document.body.removeChild(container);
-
-            const imgData = canvas.toDataURL('image/png');
-            const imgWidth = 210;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        function showQRScannerModal() {
+            document.getElementById('qrScannerModal').style.display = 'block';
+            startHTML5QRScanner();
         }
+        function startHTML5QRScanner() {
+            if (isScanning) return;
+            const qrReaderDiv = document.getElementById('qr-reader');
+            const statusDiv = document.getElementById('scanStatus');
+            if (html5QrcodeScanner) {
+                try {
+                    html5QrcodeScanner.clear().catch(() => { });
+                } catch (e) {
+                    console.log('Scanner already cleared');
+                }
+                html5QrcodeScanner = null;
+            }
+            qrReaderDiv.innerHTML = '';
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = 'جاري تشغيل الماسح...';
+            statusDiv.className = 'scan-status info';
+            if (typeof Html5QrcodeScanner === 'undefined') {
+                statusDiv.textContent = 'خطأ: مكتبة HTML5-QRCode غير محملة';
+                statusDiv.className = 'scan-status error';
+                return;
+            }
+            setTimeout(() => {
+                try {
+                    html5QrcodeScanner = new Html5QrcodeScanner(
+                        "qr-reader",
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 },
+                            aspectRatio: 1.0,
+                            showTorchButtonIfSupported: true,
+                            supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+                            rememberLastUsedCamera: true
+                        },
+                        false
+                    );
+                    html5QrcodeScanner.render(
+                        (decodedText, decodedResult) => {
+                            statusDiv.textContent = 'تم العثور على QR Code!';
+                            statusDiv.className = 'scan-status success';
+                            try {
+                                scannedData = JSON.parse(decodedText);
+                                displayScannedData(scannedData);
+                            } catch (e) {
+                                displayScannedData(decodedText);
+                            }
+                            stopScanner();
+                        },
+                        (error) => {
+                        }
+                    );
+                    isScanning = true;
+                    statusDiv.textContent = 'جاري البحث عن QR Code...';
+                    statusDiv.className = 'scan-status info';
+                    setTimeout(() => {
+                        translateButtonsToArabic();
+                        attachStopButtonHandler();
+                    }, 1500);
+                    const observer = new MutationObserver(() => {
+                        setTimeout(() => {
+                            translateButtonsToArabic();
+                            attachStopButtonHandler();
+                        }, 100);
+                    });
+                    observer.observe(document.getElementById('qr-reader'), {
+                        childList: true,
+                        subtree: true
+                    });
+                } catch (error) {
+                    statusDiv.textContent = 'خطأ في تشغيل الماسح: ' + error.message;
+                    statusDiv.className = 'scan-status error';
+                    console.error('Scanner Error:', error);
+                    isScanning = false;
+                }
+            }, 500);
+        }
+        function stopScanner() {
+            if (html5QrcodeScanner && isScanning) {
+                html5QrcodeScanner.clear().then(() => {
+                    html5QrcodeScanner = null;
+                    isScanning = false;
+                    const statusDiv = document.getElementById('scanStatus');
+                    statusDiv.style.display = 'none';
+                    document.getElementById('qr-reader').innerHTML = '';
+                }).catch(err => {
+                    console.error("Error clearing scanner:", err);
+                    html5QrcodeScanner = null;
+                    isScanning = false;
+                    const statusDiv = document.getElementById('scanStatus');
+                    statusDiv.style.display = 'none';
+                    document.getElementById('qr-reader').innerHTML = '';
 
-        function createFirstPageHTML(reportDate, totalCandidates, totalVotes, totalVoteSets, invalidVotes, firstPageCandidates, serialStart = 1) {
-            let candidatesTableHTML = '';
-
-            if (firstPageCandidates.length > 0) {
-                candidatesTableHTML = `
-                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                        <thead>
-                            <tr style="background: linear-gradient(45deg, #667eea, #764ba2); color: white;">
-                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center; width: 80px;">م</th>
-                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">رقم المرشح</th>
-                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">عدد الأصوات</th>
-                                <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">النسبة المئوية</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                firstPageCandidates.forEach((candidate, index) => {
-                    const bgColor = index % 2 === 0 ? '#f8f9ff' : 'white';
-                    candidatesTableHTML += `
-                        <tr style="background: ${bgColor};">
-                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center; font-weight: bold; color: #667eea;">${serialStart + index}</td>
-                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.number}</td>
-                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.votes}</td>
-                            <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.percentage}</td>
-                        </tr>
-                    `;
                 });
-
-                candidatesTableHTML += '</tbody></table>';
-            } else {
-                candidatesTableHTML = '<p style="color: #666; text-align: center; margin: 20px 0;">لا توجد نتائج متاحة حالياً</p>';
             }
-
-            return `
-                <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 30px; text-align: center; border-radius: 10px; margin-bottom: 30px;">
-                    <h1 style="margin: 0; font-size: 28px;">تقرير نتائج فرز الأصوات الانتخابية</h1>
-                </div>
-
-                <div style="margin-bottom: 30px;">
-                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">معلومات التقرير</h2>
-                    <p><strong>تاريخ التقرير:</strong> ${reportDate}</p>
-                    <p><strong>النظام:</strong> نظام فرز الأصوات الانتخابية</p>
-                </div>
-
-                <div style="margin-bottom: 30px;">
-                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">الإحصائيات العامة</h2>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
-                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
-                            <strong>عدد المرشحين:</strong> ${totalCandidates}
-                        </div>
-                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
-                            <strong>إجمالي الأصوات:</strong> ${totalVotes}
-                        </div>
-                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
-                            <strong>الأصوات الصحيحة:</strong> ${totalVoteSets}
-                        </div>
-                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea;">
-                            <strong>الأصوات الباطلة:</strong> ${invalidVotes}
-                        </div>
-                        <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; border-right: 4px solid #667eea; margin-top: 15px;">
-                            <strong>الأصوات المُدلى بها:</strong> ${parseInt(totalVoteSets) + parseInt(invalidVotes)}
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 30px;">
-                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">نتائج المرشحين</h2>
-                    ${candidatesTableHTML}
-                </div>
-            `;
         }
-
-        // دالة إنشاء صفحات المرشحين الإضافية
-        function createCandidatesPageHTML(candidates, pageNumber, totalPages, serialStart) {
-            let candidatesTableHTML = `
-                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                    <thead>
-                        <tr style="background: linear-gradient(45deg, #667eea, #764ba2); color: white;">
-                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center; width: 80px;">م</th>
-                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">رقم المرشح</th>
-                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">عدد الأصوات</th>
-                            <th style="padding: 15px; border: 1px solid #ddd; text-align: center;">النسبة المئوية</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            candidates.forEach((candidate, index) => {
-                const bgColor = index % 2 === 0 ? '#f8f9ff' : 'white';
-                candidatesTableHTML += `
-                    <tr style="background: ${bgColor};">
-                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center; font-weight: bold; color: #667eea;">${serialStart + index}</td>
-                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.number}</td>
-                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.votes}</td>
-                        <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">${candidate.percentage}</td>
-                    </tr>
-                `;
+        function attachStopButtonHandler() {
+            const stopButtons = document.querySelectorAll('#qr-reader button[id*="stop"]');
+            stopButtons.forEach(button => {
+                if (!button.hasAttribute('data-custom-handler')) {
+                    button.setAttribute('data-custom-handler', 'true');
+                    button.addEventListener('click', function () {
+                        stopScanner();
+                    });
+                }
             });
-
-            candidatesTableHTML += '</tbody></table>';
-
-            return `
-                <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 30px;">
-                    <h1 style="margin: 0; font-size: 24px;">تكملة نتائج المرشحين - صفحة ${pageNumber}</h1>
-                </div>
-
-                <div style="margin-bottom: 30px;">
-                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">نتائج المرشحين (تكملة)</h2>
-                    ${candidatesTableHTML}
-                </div>
-
-                <div style="text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
-                    <p>صفحة ${pageNumber} من ${totalPages}</p>
-                </div>
-            `;
         }
+        function translateButtonsToArabic() {
+            const translations = {
+                'Request Camera Permissions': '📷 طلب إذن الكاميرا',
+                'Request camera permissions': '📷 طلب إذن الكاميرا',
+                'Start Scanning': '▶️ بدء المسح',
+                'Start scanning': '▶️ بدء المسح',
+                'Stop Scanning': '⏹️ إيقاف المسح',
+                'Stop scanning': '⏹️ إيقاف المسح',
+                'Switch Camera': '🔄 تبديل الكاميرا',
+                'Switch camera': '🔄 تبديل الكاميرا',
+                'Toggle Torch': '🔦 تشغيل الفلاش',
+                'Toggle torch': '🔦 تشغيل الفلاش',
+                'Flash On': '🔦 إطفاء الفلاش',
+                'Flash Off': '🔦 تشغيل الفلاش',
+                'Requesting camera permissions...': 'جاري طلب إذن الكاميرا...',
+                'Camera permission denied.': 'تم رفض إذن الكاميرا.',
+                'Camera started': 'تم تشغيل الكاميرا',
+                'Scanning paused': 'تم إيقاف المسح مؤقتاً',
+                'Scanning resumed': 'تم استئناف المسح'
+            };
+            const buttons = document.querySelectorAll('#qr-reader button');
+            buttons.forEach(button => {
+                const originalText = button.textContent.trim();
+                if (translations[originalText]) {
+                    button.textContent = translations[originalText];
+                }
+            });
+            const messageElements = document.querySelectorAll('#qr-reader div[id*="header_message"]');
+            messageElements.forEach(element => {
+                const originalText = element.textContent.trim();
+                if (translations[originalText]) {
+                    element.textContent = translations[originalText];
+                }
+            });
+            const selects = document.querySelectorAll('#qr-reader select');
+            selects.forEach(select => {
+                if (!select.hasAttribute('data-translated')) {
+                    select.setAttribute('data-translated', 'true');
+                    select.style.fontSize = '12px';
+                    if (select.options.length > 0 && !select.options[0].textContent.includes('اختر')) {
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = '';
+                        defaultOption.textContent = 'اختر الكاميرا';
+                        defaultOption.disabled = true;
+                        defaultOption.selected = true;
+                        select.insertBefore(defaultOption, select.firstChild);
+                    }
+                }
+            });
+            const labels = document.querySelectorAll('#qr-reader label');
+            labels.forEach(label => {
+                const text = label.textContent.trim().toLowerCase();
+                if (text.includes('camera') || text.includes('select')) {
+                    label.textContent = 'اختيار الكاميرا:';
+                }
+            });
+        }
+        function uploadQRImage() {
+            document.getElementById('qrFileInput').click();
+        }
+        document.getElementById('qrFileInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const statusDiv = document.getElementById('scanStatus');
+            statusDiv.textContent = 'جاري قراءة الصورة...';
+            statusDiv.className = 'scan-status info';
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().then(() => {
+                    html5QrcodeScanner = null;
+                    isScanning = false;
+                }).catch(err => console.error(err));
+            }
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                statusDiv.textContent = 'نوع الملف غير مدعوم. يرجى اختيار صورة (JPG, PNG, GIF, WEBP)';
+                statusDiv.className = 'scan-status error';
+                return;
+            }
+            const html5QrCode = new Html5Qrcode("temp-qr-reader");
+            html5QrCode.scanFile(file, true)
+                .then(decodedText => {
+                    statusDiv.textContent = 'تم قراءة QR Code من الصورة بنجاح!';
+                    statusDiv.className = 'scan-status success';
+                    try {
+                        scannedData = JSON.parse(decodedText);
+                        displayScannedData(scannedData);
+                    } catch (e) {
+                        scannedData = { rawText: decodedText };
+                        displayScannedData(scannedData);
+                        statusDiv.textContent = 'تم قراءة QR Code (نص عادي)';
+                    }
+                })
+                .catch(err => {
+                    console.error('File scan error:', err);
+                    tryAlternativeFileRead(file, statusDiv);
+                });
+        });
+        function tryAlternativeFileRead(file, statusDiv) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    Html5Qrcode.scanFile(file, false)
+                        .then(decodedText => {
+                            statusDiv.textContent = 'تم قراءة QR Code بالطريقة البديلة!';
+                            statusDiv.className = 'scan-status success';
 
-        // دالة إنشاء الصفحة النهائية
-        function createFinalPageHTML(reportDate) {
-            return `
-                <div style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 30px;">
-                    <h1 style="margin: 0; font-size: 24px;">الملاحظات والتوقيعات</h1>
-                </div>
+                            try {
+                                scannedData = JSON.parse(decodedText);
+                                displayScannedData(scannedData);
+                            } catch (e) {
+                                scannedData = { rawText: decodedText };
+                                displayScannedData(scannedData);
+                            }
+                        })
+                        .catch(finalErr => {
+                            statusDiv.textContent = 'لم يتم العثور على QR Code صالح في الصورة';
+                            statusDiv.className = 'scan-status error';
+                            console.error('Final scan error:', finalErr);
+                        });
+                };
+                img.onerror = function () {
+                    statusDiv.textContent = 'خطأ في تحميل الصورة';
+                    statusDiv.className = 'scan-status error';
+                };
 
-                <div style="margin-bottom: 30px;">
-                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">ملاحظات</h2>
-                    <ul style="color: #666; padding-right: 20px;">
-                        <li>تم إنشاء هذا التقرير آلياً من نظام فرز الأصوات الانتخابية</li>
-                        <li>يُرجى مراجعة البيانات والتأكد من صحتها قبل الاعتماد عليها</li>
-                    </ul>
-                </div>
+                img.src = e.target.result;
+            };
+            reader.onerror = function () {
+                statusDiv.textContent = 'خطأ في قراءة الملف';
+                statusDiv.className = 'scan-status error';
+            };
 
-                <div style="margin-bottom: 50px;">
-                    <h2 style="color: #667eea; border-bottom: 3px solid #667eea; padding-bottom: 10px;">التوقيعات</h2>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
-                        <div style="text-align: center;">
-                            <div style="border-bottom: 2px solid #333; width: 200px; margin: 40px auto 10px;"></div>
-                            <p><strong>رئيس اللجنة</strong></p>
+            reader.readAsDataURL(file);
+        }
+        if (!document.getElementById('temp-qr-reader')) {
+            const tempDiv = document.createElement('div');
+            tempDiv.id = 'temp-qr-reader';
+            tempDiv.style.display = 'none';
+            document.body.appendChild(tempDiv);
+        }
+        function displayScannedData(data) {
+            const resultDiv = document.getElementById('scanResult');
+            const mergeBtn = document.getElementById('mergeDataBtn');
+            if (!data || typeof data !== 'object') {
+                resultDiv.innerHTML = '<p style="color: red;">بيانات غير صالحة</p>';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            const candidatesCount = Object.keys(data.candidates || {}).length;
+            const validVotesCount = data.totalVoteSets || data.validVotes?.length || 0;
+            const invalidVotesCount = data.invalidVotesCount || 0;
+            const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('ar-EG') : 'غير محدد';
+            const candidatesDetails = Object.entries(data.candidates || {})
+                .sort(([, a], [, b]) => b - a)
+                .map(([id, votes]) => `<div style="padding: 5px; background: #f8f9fa; margin: 2px 0; border-radius: 3px;">🏷️ المرشح ${id}: <strong style="color: #28a745;">${votes}</strong> صوت</div>`)
+                .join('');
+            const summary = `
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px solid #28a745; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <strong style="color: #28a745; font-size: 18px;">✅ تم قراءة البيانات بنجاح!</strong>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <strong style="color: #007bff; font-size: 16px;">📊 ملخص البيانات:</strong><br><br>
+                        🗳️ عدد المرشحين: <span style="color: #007bff; font-weight: bold;">${candidatesCount}</span><br>
+                        ✅ الأصوات الصحيحة: <span style="color: #28a745; font-weight: bold;">${validVotesCount}</span><br>
+                        ❌ الأصوات الباطلة: <span style="color: #dc3545; font-weight: bold;">${invalidVotesCount}</span><br>
+                        📅 وقت الإنشاء: <span style="color: #6c757d;">${timestamp}</span>
+                    </div>
+                    <details style="margin-bottom: 15px;">
+                        <summary style="cursor: pointer; color: #007bff; font-weight: bold; padding: 10px; background: #e7f3ff; border-radius: 5px;">
+                            📋 عرض التفاصيل
+                        </summary>
+                        <div style="
+                            margin-top: 10px;
+                            padding: 15px;
+                            background: white;
+                            border-radius: 8px;
+                            border: 1px solid #dee2e6;
+                            max-height: 300px; 
+                            overflow-y: auto;
+                        ">
+                            ${candidatesDetails || '<div style="color: #6c757d; text-align: center;">لا توجد بيانات مرشحين</div>'}
                         </div>
-                        <div style="text-align: center;">
-                            <div style="border-bottom: 2px solid #333; width: 200px; margin: 40px auto 10px;"></div>
-                            <p><strong>أمين اللجنة</strong></p>
-                        </div>
+                    </details>
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeaa7; text-align: center;">
+                        <strong style="color: #856404;">⚠️ هام:</strong><br>
+                        <span style="color: #856404;">
+                            اضغط على "دمج البيانات" أدناه لإضافة هذه النتائج إلى البيانات الحالية في النظام
+                        </span>
                     </div>
                 </div>
-
-                <div style="text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
-                    <p>تم إنشاء هذا التقرير في ${reportDate}</p>
-                </div>
-
-                <div style="text-align: center; margin-top: 30px;">
-                    <p style="font-size: 1.1rem; color: #444;">
-                        <span>إهداء من المستشار <strong>محمد الحمراوي</strong>، وكيل النيابة الإدارية، للسادة الأعضاء</span>
-                    </p>
-                </div>
             `;
+            resultDiv.innerHTML = summary;
+            resultDiv.style.display = 'block';
+            mergeBtn.style.display = 'inline-block';
+        }
+        function closeQRScannerModal() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().then(() => {
+                    html5QrcodeScanner = null;
+                }).catch(err => {
+                    console.error("Error clearing scanner:", err);
+                });
+            }
+            isScanning = false;
+            scannedData = null;
+            const qrReaderDiv = document.getElementById('qr-reader');
+            if (qrReaderDiv) {
+                qrReaderDiv.innerHTML = '';
+            }
+            const statusDiv = document.getElementById('scanStatus');
+            if (statusDiv) {
+                statusDiv.textContent = 'جاري تشغيل الماسح...';
+                statusDiv.className = 'scan-status info';
+            }
+            const resultDiv = document.getElementById('scanResult');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+            const mergeBtn = document.getElementById('mergeDataBtn');
+            if (mergeBtn) {
+                mergeBtn.style.display = 'none';
+            }
+            const modal = document.getElementById('qrScannerModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            stopScanner();
+
+        }
+
+        window.addEventListener('error', function (e) {
+            if (e.message.includes('qr') || e.message.includes('QR')) {
+                console.error('QR Scanner Error:', e);
+                const statusDiv = document.getElementById('scanStatus');
+                if (statusDiv) {
+                    statusDiv.textContent = 'حدث خطأ في النظام: ' + e.message;
+                    statusDiv.className = 'scan-status error';
+                }
+            }
+        });
+        function mergeScannedData() {
+            if (!scannedData) {
+                alert('❌ لا توجد بيانات للدمج');
+                return;
+            }
+            const validation = validateQRData(scannedData);
+            if (!validation.isValid) {
+                alert('❌ البيانات المسحة غير صالحة:\n' + validation.errors.join('\n'));
+                return;
+            }
+            const candidatesCount = Object.keys(scannedData.candidates).length;
+            const validVotesToAdd = scannedData.totalVoteSets || (scannedData.validVotes?.length) || 0;
+            const invalidVotesToAdd = parseInt(scannedData.invalidVotesCount) || 0;
+            const totalVotesToAdd = validVotesToAdd + invalidVotesToAdd;
+            const candidatesList = Object.entries(scannedData.candidates)
+                .map(([id, votes]) => `• المرشح ${id}: ${votes} صوت`)
+                .join('\n');
+            const confirmMessage = `هل أنت متأكد من دمج البيانات ؟
+                ⚠️ تحذير: هذا الإجراء لا يمكن التراجع عنه!`;
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            try {
+                const beforeStats = {
+                    candidates: Object.keys(candidates).length,
+                    candidatesVotes: { ...candidates },
+                    validVotes: validVotes.length,
+                    invalidVotes: invalidVotesCount,
+                    totalVotes: validVotes.length + invalidVotesCount
+                };
+                let mergedCandidatesCount = 0;
+                let newCandidatesCount = 0;
+                const mergeDetails = [];
+                Object.entries(scannedData.candidates).forEach(([candidateId, votes]) => {
+                    const votesToAdd = parseInt(votes) || 0;
+                    if (votesToAdd > 0) {
+                        const oldVotes = candidates[candidateId] || 0;
+                        const isNewCandidate = !candidates.hasOwnProperty(candidateId);
+                        candidates[candidateId] = oldVotes + votesToAdd;
+                        mergeDetails.push({
+                            id: candidateId,
+                            oldVotes: oldVotes,
+                            addedVotes: votesToAdd,
+                            newTotal: candidates[candidateId],
+                            isNew: isNewCandidate
+                        });
+                        mergedCandidatesCount++;
+                        if (isNewCandidate) newCandidatesCount++;
+                    }
+                });
+                const votesToAdd = [];
+                if (Array.isArray(scannedData.validVotes)) {
+                    scannedData.validVotes.forEach((vote, index) => {
+                        votesToAdd.push({
+                            ...vote,
+                            merged: true,
+                            mergeTimestamp: new Date().toISOString(),
+                            originalIndex: index,
+                            source: 'QR_MERGE'
+                        });
+                    });
+                } else if (scannedData.totalVoteSets && scannedData.totalVoteSets > 0) {
+                    for (let i = 0; i < scannedData.totalVoteSets; i++) {
+                        votesToAdd.push({
+                            merged: true,
+                            mergeTimestamp: new Date().toISOString(),
+                            syntheticVote: true,
+                            originalIndex: i,
+                            source: 'QR_MERGE_SYNTHETIC'
+                        });
+                    }
+                }
+                validVotes.push(...votesToAdd);
+                invalidVotesCount += invalidVotesToAdd;
+                voteHistory.push({
+                    type: 'qr_merge',
+                    timestamp: new Date().toISOString(),
+                    source: 'QR Code Scanner',
+                    originalQRTimestamp: scannedData.timestamp,
+                    beforeStats: beforeStats,
+                    afterStats: {
+                        candidates: Object.keys(candidates).length,
+                        candidatesVotes: { ...candidates },
+                        validVotes: validVotes.length,
+                        invalidVotes: invalidVotesCount,
+                        totalVotes: validVotes.length + invalidVotesCount
+                    },
+                    mergeDetails: mergeDetails,
+                    summary: {
+                        candidatesCount: mergedCandidatesCount,
+                        newCandidatesCount: newCandidatesCount,
+                        validVotesAdded: validVotesToAdd,
+                        invalidVotesAdded: invalidVotesToAdd,
+                        totalVotesAdded: totalVotesToAdd
+                    }
+                });
+                updateStats();
+                updateCandidatesTable();
+                const undoBtn = document.getElementById('undoBtn');
+                if (undoBtn) {
+                    undoBtn.disabled = voteHistory.length === 0;
+                }
+                closeQRScannerModal();
+                const successMessage = `✅ تم دمج البيانات بنجاح!`;
+                showSuccess(successMessage);
+            } catch (error) {
+                console.error('❌ خطأ في دمج البيانات:', error);
+                alert(`❌ حدث خطأ أثناء دمج البيانات: ${error.message}\n\nيرجى المحاولة مرة أخرى أو الاتصال بالدعم الفني.`);
+                try {
+                    const backupData = localStorage.getItem("voteCounterData_auto");
+                    if (backupData) {
+                        console.log('🔄 محاولة استعادة البيانات من النسخة الاحتياطية...');
+                    }
+                } catch (backupError) {
+                    console.error('❌ فشل في استعادة النسخة الاحتياطية:', backupError);
+                }
+            }
+        }
+        function validateQRData(data) {
+            const errors = [];
+            if (!data || typeof data !== 'object') {
+                errors.push('البيانات غير صالحة أو مفقودة');
+                return { isValid: false, errors };
+            }
+            if (!data.candidates || typeof data.candidates !== 'object') {
+                errors.push('بيانات المرشحين مفقودة أو غير صالحة');
+            } else {
+                Object.entries(data.candidates).forEach(([id, votes]) => {
+                    if (typeof votes !== 'number' || votes < 0 || !Number.isInteger(votes)) {
+                        errors.push(`عدد أصوات المرشح ${id} غير صالح: ${votes}`);
+                    }
+                    if (!/^\d+$/.test(id)) {
+                        errors.push(`رقم المرشح غير صالح: ${id}`);
+                    }
+                });
+                if (Object.keys(data.candidates).length === 0) {
+                    errors.push('لا توجد بيانات مرشحين للدمج');
+                }
+            }
+            if (data.invalidVotesCount !== undefined) {
+                const invalidCount = parseInt(data.invalidVotesCount);
+                if (isNaN(invalidCount) || invalidCount < 0) {
+                    errors.push('عدد الأصوات الباطلة غير صالح');
+                }
+            }
+            if (data.totalVoteSets !== undefined) {
+                const totalSets = parseInt(data.totalVoteSets);
+                if (isNaN(totalSets) || totalSets < 0) {
+                    errors.push('عدد الأصوات الصحيحة غير صالح');
+                }
+            }
+            if (data.timestamp && isNaN(new Date(data.timestamp).getTime())) {
+                errors.push('توقيت البيانات غير صالح');
+            }
+            if (data.systemVersion && typeof data.systemVersion !== 'string') {
+                errors.push('نسخة النظام غير صالحة');
+            }
+            return {
+                isValid: errors.length === 0,
+                errors: errors
+            };
         }
     </script>
 </body>
